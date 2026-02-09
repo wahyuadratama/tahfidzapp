@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "nama": "Sahrul Gunawan",
+    "kelas": "2",
+    "aktif": true
+  },
+  {
+    "id": 2,
+    "nama": "Fikri",
+    "kelas": "5",
+    "aktif": true
+  }
+]

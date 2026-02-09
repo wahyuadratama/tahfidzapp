@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="assets/logopondok.png" />
+    <title>Dashboard - Tahfidz App Ponpes Darul Mukhlisin</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+      }
+      .navbar {
+        background: linear-gradient(135deg, #00b7b5 0%, #008f8d 100%);
+        color: white;
+        padding: 20px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+      .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .navbar-brand .icon {
+        width: 45px;
+        height: 45px;
+        object-fit: contain;
+      }
+      .navbar h1 {
+        font-size: 26px;
+        font-weight: 600;
+      }
+      .navbar button {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        padding: 10px 24px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        backdrop-filter: blur(10px);
+      }
+      .navbar button:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+      .welcome-section {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 40px;
+        animation: fadeIn 0.5s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .welcome-section h2 {
+        color: #333;
+        font-size: 28px;
+        margin-bottom: 8px;
+      }
+      .welcome-section p {
+        color: #666;
+        font-size: 16px;
+      }
+      .welcome-section .user-name {
+        background: linear-gradient(135deg, #00b7b5 0%, #008f8d 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 700;
+      }
+      .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+      }
+      .menu-card {
+        background: white;
+        padding: 40px 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+        animation: slideUp 0.5s ease;
+        animation-fill-mode: both;
+      }
+      .menu-card:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .menu-card:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .menu-card:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .menu-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(135deg, #00b7b5 0%, #008f8d 100%);
+        transform: scaleX(0);
+        transition: transform 0.3s;
+      }
+      .menu-card:hover::before {
+        transform: scaleX(1);
+      }
+      .menu-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 183, 181, 0.3);
+      }
+      .menu-card .icon {
+        font-size: 64px;
+        margin-bottom: 20px;
+        display: inline-block;
+        transition: transform 0.3s;
+      }
+      .menu-card:hover .icon {
+        transform: scale(1.1) rotate(5deg);
+      }
+      .menu-card h3 {
+        color: #333;
+        margin-bottom: 12px;
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .menu-card p {
+        color: #666;
+        font-size: 15px;
+        line-height: 1.5;
+      }
+      .menu-card.santri {
+        border-top: 5px solid #00b7b5;
+      }
+      .menu-card.setoran {
+        border-top: 5px solid #00d4d2;
+      }
+      .menu-card.laporan {
+        border-top: 5px solid #00a09e;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="navbar-brand">
+        <img src="assets/logopondok.png" alt="Logo" class="icon" />
+        <h1>TahfidzApp Ponpes Darul Mukhlisin</h1>
+      </div>
+      <button onclick="logout()">← Logout</button>
+    </div>
+
+    <div class="container">
+      <div class="welcome-section">
+        <h2>
+          Assalamu'alaikum, <span class="user-name" id="ustadzName"></span>
+        </h2>
+        <p>Selamat datang di Sistem Pencatatan Setoran Tahfidz</p>
+      </div>
+
+      <div class="menu-grid">
+        <div class="menu-card santri" onclick="location.href = 'santri.html'">
+          <div class="icon">📋</div>
+          <h3>Data Santri</h3>
+          <p>Kelola data santri dan informasi halaqah</p>
+        </div>
+
+        <div class="menu-card setoran" onclick="location.href = 'setoran.html'">
+          <div class="icon">✍️</div>
+          <h3>Input Setoran</h3>
+          <p>Catat setoran hafalan harian santri</p>
+        </div>
+
+        <div class="menu-card laporan" onclick="location.href = 'laporan.html'">
+          <div class="icon">📊</div>
+          <h3>Laporan</h3>
+          <p>Lihat dan cetak laporan mingguan/bulanan</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const ustadz = localStorage.getItem("ustadz");
+      if (!ustadz) {
+        window.location.href = "index.html";
+      } else {
+        document.getElementById("ustadzName").textContent = ustadz;
+      }
+
+      function logout() {
+        localStorage.removeItem("ustadz");
+        window.location.href = "index.html";
+      }
+    </script>
+  </body>
+</html>

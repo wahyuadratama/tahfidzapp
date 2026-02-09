@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/logopondok.png">
+  <title>Login - Tahfidz App</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+    body::before {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      top: -250px;
+      right: -250px;
+    }
+    body::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      bottom: -200px;
+      left: -200px;
+    }
+    .login-container {
+      position: relative;
+      z-index: 1;
+    }
+    .login-box { 
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      padding: 50px 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      width: 400px;
+      animation: slideUp 0.5s ease;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .logo img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+    }
+    h2 { 
+      text-align: center;
+      margin-bottom: 10px;
+      color: #333;
+      font-size: 28px;
+      font-weight: 600;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+    .form-group { 
+      margin-bottom: 25px;
+      position: relative;
+    }
+    label { 
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 500;
+      font-size: 14px;
+    }
+    .input-wrapper {
+      position: relative;
+    }
+    .input-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+      font-size: 18px;
+    }
+    input { 
+      width: 100%;
+      padding: 14px 15px 14px 45px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 15px;
+      transition: all 0.3s;
+    }
+    input:focus {
+      outline: none;
+      border-color: #00B7B5;
+      box-shadow: 0 0 0 3px rgba(0,183,181,0.1);
+    }
+    button { 
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 10px;
+    }
+    button:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0,183,181,0.4);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    .error { 
+      color: #e74c3c;
+      font-size: 14px;
+      margin-top: 15px;
+      text-align: center;
+      background: #ffe5e5;
+      padding: 10px;
+      border-radius: 8px;
+      display: none;
+    }
+    .error.show { display: block; }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <div class="logo">
+        <img src="assets/logopondok.png" alt="Logo">
+      </div>
+      <h2>Tahfidz App</h2>
+      <p class="subtitle">Sistem Pencatatan Setoran Tahfidz</p>
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Username</label>
+          <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input type="text" id="username" placeholder="Masukkan username" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="password" placeholder="Masukkan password" required>
+          </div>
+        </div>
+        <button type="submit">Masuk</button>
+        <div id="error" class="error"></div>
+      </form>
+      <div style="text-align: center; margin-top: 20px; color: #666; font-size: 14px;">
+        Belum punya akun? <a href="register.html" style="color: #00B7B5; text-decoration: none; font-weight: 600;">Daftar di sini</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        localStorage.setItem('ustadz', data.nama);
+        window.location.href = 'dashboard.html';
+      } else {
+        const errorEl = document.getElementById('error');
+        errorEl.textContent = data.message;
+        errorEl.classList.add('show');
+      }
+    });
+  </script>
+</body>
+</html>

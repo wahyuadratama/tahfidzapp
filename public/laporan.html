@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/logopondok.png">
+  <title>Laporan - Tahfidz App</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+    }
+    .navbar { 
+      background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
+      color: white;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .navbar h1 { font-size: 26px; font-weight: 600; }
+    .navbar .logo { width: 45px; height: 45px; object-fit: contain; margin-right: 15px; }
+    .navbar a { 
+      color: white;
+      text-decoration: none;
+      background: rgba(255,255,255,0.2);
+      padding: 10px 24px;
+      border-radius: 25px;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+    .navbar a:hover { background: rgba(255,255,255,0.3); }
+    .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+    .form-box { 
+      background: white;
+      padding: 35px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .form-box h3 { 
+      color: #333;
+      margin-bottom: 25px;
+      font-size: 22px;
+      padding-bottom: 15px;
+      border-bottom: 3px solid #00B7B5;
+    }
+    .form-group { 
+      display: inline-block;
+      margin-right: 20px;
+      margin-bottom: 20px;
+    }
+    label { 
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    input { 
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 15px;
+      transition: all 0.3s;
+    }
+    input:focus {
+      outline: none;
+      border-color: #00B7B5;
+      box-shadow: 0 0 0 3px rgba(0,183,181,0.1);
+    }
+    .button-group {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    button { 
+      padding: 12px 28px;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      transition: all 0.3s;
+    }
+    button:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .btn-view { background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%); }
+    .btn-pdf { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
+    .btn-excel { background: linear-gradient(135deg, #27ae60 0%, #229954 100%); }
+    .report-container {
+      background: white;
+      padding: 35px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      animation: fadeIn 0.6s ease;
+    }
+    .report-container h3 {
+      color: #333;
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+    .report-container p {
+      color: #666;
+      margin-bottom: 25px;
+      font-size: 15px;
+    }
+    .table-container {
+      overflow-x: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 16px; text-align: left; }
+    th { 
+      background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+    }
+    tbody tr {
+      border-bottom: 1px solid #f0f0f0;
+      transition: all 0.3s;
+    }
+    tbody tr:hover { background: #f8fffe; }
+    #reportResult { display: none; }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div style="display: flex; align-items: center;">
+      <img src="assets/logopondok.png" alt="Logo" class="logo">
+      <h1>📊 Laporan Setoran</h1>
+    </div>
+    <a href="dashboard.html">← Kembali</a>
+  </div>
+
+  <div class="container">
+    <div class="form-box">
+      <h3>Generate Laporan</h3>
+      
+      <div class="form-group">
+        <label>📅 Tanggal Mulai</label>
+        <input type="date" id="startDate" required>
+      </div>
+      
+      <div class="form-group">
+        <label>📅 Tanggal Akhir</label>
+        <input type="date" id="endDate" required>
+      </div>
+      
+      <div class="button-group">
+        <button class="btn-view" onclick="generateReport('view')">👁️ Lihat Laporan</button>
+        <button class="btn-pdf" onclick="generateReport('pdf')">📝 Download PDF</button>
+        <button class="btn-excel" onclick="generateReport('excel')">📊 Download Excel</button>
+      </div>
+    </div>
+
+    <div id="reportResult" class="report-container">
+      <h3>Hasil Laporan</h3>
+      <p id="periode"></p>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama Santri</th>
+              <th>Ustadz Pendamping</th>
+              <th>Total Ayat</th>
+              <th>Capaian Juz</th>
+            </tr>
+          </thead>
+          <tbody id="reportTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    if (!localStorage.getItem('ustadz')) window.location.href = 'index.html';
+
+    async function generateReport(format) {
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+
+      if (!startDate || !endDate) {
+        alert('Pilih tanggal mulai dan akhir');
+        return;
+      }
+
+      const ustadzName = localStorage.getItem('ustadz');
+
+      const res = await fetch('/api/report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ startDate, endDate, format, ustadzName })
+      });
+
+      const result = await res.json();
+
+      if (format === 'view') {
+        document.getElementById('periode').textContent = `Periode: ${startDate} – ${endDate}`;
+        const tbody = document.getElementById('reportTable');
+        tbody.innerHTML = result.data.map((row, i) => `
+          <tr>
+            <td><strong>${i + 1}</strong></td>
+            <td><strong>${row.nama}</strong></td>
+            <td>${row.ustadz}</td>
+            <td><span style="color: #00B7B5; font-weight: 600;">${row.totalAyat}</span></td>
+            <td><span style="color: #00B7B5; font-weight: 600;">${row.capaianJuz}</span></td>
+          </tr>
+        `).join('');
+        document.getElementById('reportResult').style.display = 'block';
+      } else if (format === 'pdf' || format === 'excel') {
+        window.open(result.file, '_blank');
+      }
+    }
+
+    // Set default dates (current week)
+    const today = new Date();
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - today.getDay() + 1);
+    document.getElementById('startDate').valueAsDate = monday;
+    document.getElementById('endDate').valueAsDate = today;
+  </script>
+</body>
+</html>

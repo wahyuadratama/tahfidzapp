@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "santri_id": 1,
+    "ustadz": "Ust. Ali",
+    "juz": 2,
+    "nama_surat": "Al-Baqarah",
+    "ayat_awal": 1,
+    "ayat_akhir": 10,
+    "total_ayat": 10,
+    "tanggal": "2026-01-05"
+  },
+  {
+    "id": 2,
+    "santri_id": 1,
+    "ustadz": "Ust. Ali",
+    "juz": 2,
+    "nama_surat": "Al-Baqarah",
+    "ayat_awal": 11,
+    "ayat_akhir": 25,
+    "total_ayat": 15,
+    "tanggal": "2026-01-06"
+  },
+  {
+    "id": 3,
+    "santri_id": 1,
+    "ustadz": "Ustadz Aflah",
+    "juz": 1,
+    "nama_surat": "Al-Fatihah",
+    "ayat_awal": 1,
+    "ayat_akhir": 4,
+    "total_ayat": 4,
+    "tanggal": "2026-02-09"
+  },
+  {
+    "id": 4,
+    "santri_id": 1,
+    "ustadz": "Ustadz Zaenal Wahyudin",
+    "juz": 1,
+    "nama_surat": "Al-Baqarah",
+    "ayat_awal": 1,
+    "ayat_akhir": 10,
+    "total_ayat": 10,
+    "tanggal": "2026-02-09"
+  },
+  {
+    "id": 5,
+    "santri_id": 1,
+    "ustadz": "Ustadz Zaenal Wahyudin",
+    "juz": 1,
+    "nama_surat": "Al-Baqarah",
+    "ayat_awal": 1,
+    "ayat_akhir": 10,
+    "total_ayat": 10,
+    "tanggal": "2026-02-09"
+  }
+]

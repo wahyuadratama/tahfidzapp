@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/logopondok.png">
+  <title>Input Setoran - Tahfidz App</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+    }
+    .navbar { 
+      background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
+      color: white;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .navbar h1 { font-size: 26px; font-weight: 600; }
+    .navbar .logo { width: 45px; height: 45px; object-fit: contain; margin-right: 15px; }
+    .navbar a { 
+      color: white;
+      text-decoration: none;
+      background: rgba(255,255,255,0.2);
+      padding: 10px 24px;
+      border-radius: 25px;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+    .navbar a:hover { background: rgba(255,255,255,0.3); }
+    .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+    .form-box { 
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .form-box h3 { 
+      color: #333;
+      margin-bottom: 25px;
+      font-size: 24px;
+      padding-bottom: 15px;
+      border-bottom: 3px solid #00B7B5;
+    }
+    .form-group { margin-bottom: 25px; }
+    label { 
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    input, select { 
+      width: 100%;
+      padding: 14px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 15px;
+      transition: all 0.3s;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #00B7B5;
+      box-shadow: 0 0 0 3px rgba(0,183,181,0.1);
+    }
+    button { 
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 16px;
+      transition: all 0.3s;
+      margin-top: 10px;
+    }
+    button:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,183,181,0.4);
+    }
+    .success { 
+      background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
+      color: white;
+      padding: 18px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      text-align: center;
+      font-weight: 600;
+      animation: slideDown 0.3s ease;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div style="display: flex; align-items: center;">
+      <img src="assets/logopondok.png" alt="Logo" class="logo">
+      <h1>✍️ Input Setoran</h1>
+    </div>
+    <a href="dashboard.html">← Kembali</a>
+  </div>
+
+  <div class="container">
+    <div id="successMsg" class="success" style="display: none;">✓ Setoran berhasil disimpan!</div>
+    
+    <div class="form-box">
+      <h3>Catat Setoran Harian</h3>
+      <form id="setoranForm">
+        <div class="form-group">
+          <label>👥 Santri</label>
+          <select id="santri_id" required></select>
+        </div>
+        
+        <div class="form-group">
+          <label>👨‍🏫 Ustadz Pendamping</label>
+          <input type="text" id="ustadz" placeholder="Nama ustadz" required>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>📖 Juz</label>
+            <input type="number" id="juz" min="1" max="30" placeholder="1-30" required>
+          </div>
+          
+          <div class="form-group">
+            <label>📄 Nama Surat</label>
+            <input type="text" id="nama_surat" placeholder="Contoh: Al-Baqarah" required>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>📅 Tanggal</label>
+            <input type="date" id="tanggal" required>
+          </div>
+          
+          <div class="form-group">
+            <label>🔢 Ayat Awal</label>
+            <input type="number" id="ayat_awal" min="1" placeholder="Ayat mulai" required>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>🔢 Ayat Akhir</label>
+            <input type="number" id="ayat_akhir" min="1" placeholder="Ayat selesai" required>
+          </div>
+          
+          <div class="form-group" style="visibility: hidden;">
+            <label>&nbsp;</label>
+            <input type="text" disabled>
+          </div>
+        </div>
+        
+        <button type="submit">💾 Simpan Setoran</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    if (!localStorage.getItem('ustadz')) window.location.href = 'index.html';
+
+    const ustadzName = localStorage.getItem('ustadz');
+    document.getElementById('ustadz').value = ustadzName;
+    document.getElementById('tanggal').valueAsDate = new Date();
+
+    async function loadSantri() {
+      const res = await fetch('/api/santri');
+      const santri = await res.json();
+      const select = document.getElementById('santri_id');
+      select.innerHTML = '<option value="">-- Pilih Santri --</option>' + 
+        santri.filter(s => s.aktif).map(s => `<option value="${s.id}">${s.nama}</option>`).join('');
+    }
+
+    document.getElementById('setoranForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const data = {
+        santri_id: document.getElementById('santri_id').value,
+        ustadz: document.getElementById('ustadz').value,
+        juz: document.getElementById('juz').value,
+        nama_surat: document.getElementById('nama_surat').value,
+        ayat_awal: document.getElementById('ayat_awal').value,
+        ayat_akhir: document.getElementById('ayat_akhir').value,
+        tanggal: document.getElementById('tanggal').value
+      };
+
+      await fetch('/api/setoran', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      document.getElementById('successMsg').style.display = 'block';
+      document.getElementById('setoranForm').reset();
+      document.getElementById('ustadz').value = ustadzName;
+      document.getElementById('tanggal').valueAsDate = new Date();
+      
+      setTimeout(() => {
+        document.getElementById('successMsg').style.display = 'none';
+      }, 3000);
+    });
+
+    loadSantri();
+  </script>
+</body>
+</html>

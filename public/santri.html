@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/logopondok.png">
+  <title>Data Santri - Tahfidz App</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+    }
+    .navbar { 
+      background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
+      color: white;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .navbar h1 { font-size: 26px; font-weight: 600; }
+    .navbar .logo { width: 45px; height: 45px; object-fit: contain; margin-right: 15px; }
+    .navbar a { 
+      color: white;
+      text-decoration: none;
+      background: rgba(255,255,255,0.2);
+      padding: 10px 24px;
+      border-radius: 25px;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+    .navbar a:hover { background: rgba(255,255,255,0.3); }
+    .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+    .form-box { 
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .form-box h3 { 
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 22px;
+      padding-bottom: 15px;
+      border-bottom: 3px solid #00B7B5;
+    }
+    .form-group { margin-bottom: 20px; }
+    label { 
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    input { 
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 15px;
+      transition: all 0.3s;
+    }
+    input:focus {
+      outline: none;
+      border-color: #00B7B5;
+      box-shadow: 0 0 0 3px rgba(0,183,181,0.1);
+    }
+    button { 
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      transition: all 0.3s;
+    }
+    button:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,183,181,0.4);
+    }
+    .table-container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      overflow: hidden;
+      animation: fadeIn 0.6s ease;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 16px; text-align: left; }
+    th { 
+      background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+    }
+    tbody tr {
+      border-bottom: 1px solid #f0f0f0;
+      transition: all 0.3s;
+    }
+    tbody tr:hover { background: #f8fffe; }
+    .btn-delete { 
+      background: #e74c3c;
+      padding: 8px 16px;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .btn-delete:hover {
+      background: #c0392b;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div style="display: flex; align-items: center;">
+      <img src="assets/logopondok.png" alt="Logo" class="logo">
+      <h1>📋 Data Santri</h1>
+    </div>
+    <a href="dashboard.html">← Kembali</a>
+  </div>
+
+  <div class="container">
+    <div class="form-box">
+      <h3>Tambah Santri Baru</h3>
+      <form id="santriForm">
+        <div class="form-group">
+          <label>Nama Santri</label>
+          <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
+        </div>
+        <div class="form-group">
+          <label>Kelas/Halaqah</label>
+          <input type="text" id="kelas" placeholder="Contoh: Halaqah A" required>
+        </div>
+        <button type="submit">💾 Simpan Data</button>
+      </form>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Nama Santri</th>
+            <th>Kelas/Halaqah</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="santriList"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    if (!localStorage.getItem('ustadz')) window.location.href = 'index.html';
+
+    async function loadSantri() {
+      const res = await fetch('/api/santri');
+      const santri = await res.json();
+      const tbody = document.getElementById('santriList');
+      tbody.innerHTML = santri.map((s, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td><strong>${s.nama}</strong></td>
+          <td>${s.kelas}</td>
+          <td><span style="color: ${s.aktif ? '#00B7B5' : '#999'}; font-weight: 600;">${s.aktif ? '✓ Aktif' : '✗ Tidak Aktif'}</span></td>
+          <td><button class="btn-delete" onclick="deleteSantri(${s.id})">🗑️ Hapus</button></td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('santriForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nama = document.getElementById('nama').value;
+      const kelas = document.getElementById('kelas').value;
+
+      await fetch('/api/santri', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nama, kelas })
+      });
+
+      document.getElementById('santriForm').reset();
+      loadSantri();
+    });
+
+    async function deleteSantri(id) {
+      if (confirm('Yakin ingin menghapus santri ini?')) {
+        await fetch(`/api/santri/${id}`, { method: 'DELETE' });
+        loadSantri();
+      }
+    }
+
+    loadSantri();
+  </script>
+</body>
+</html>

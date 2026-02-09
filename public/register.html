@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/logopondok.png">
+  <title>Registrasi - Tahfidz App</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      padding: 20px;
+    }
+    body::before {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      top: -250px;
+      right: -250px;
+    }
+    body::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      bottom: -200px;
+      left: -200px;
+    }
+    .register-container {
+      position: relative;
+      z-index: 1;
+    }
+    .register-box { 
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      padding: 50px 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      width: 400px;
+      animation: slideUp 0.5s ease;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .logo img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+    }
+    h2 { 
+      text-align: center;
+      margin-bottom: 10px;
+      color: #333;
+      font-size: 28px;
+      font-weight: 600;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+    .form-group { 
+      margin-bottom: 20px;
+      position: relative;
+    }
+    label { 
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 500;
+      font-size: 14px;
+    }
+    .input-wrapper {
+      position: relative;
+    }
+    .input-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+      font-size: 18px;
+    }
+    input { 
+      width: 100%;
+      padding: 14px 15px 14px 45px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 15px;
+      transition: all 0.3s;
+    }
+    input:focus {
+      outline: none;
+      border-color: #00B7B5;
+      box-shadow: 0 0 0 3px rgba(0,183,181,0.1);
+    }
+    button { 
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 10px;
+    }
+    button:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0,183,181,0.4);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    .success { 
+      color: #27ae60;
+      font-size: 14px;
+      margin-top: 15px;
+      text-align: center;
+      background: #d4edda;
+      padding: 10px;
+      border-radius: 8px;
+      display: none;
+    }
+    .success.show { display: block; }
+    .error { 
+      color: #e74c3c;
+      font-size: 14px;
+      margin-top: 15px;
+      text-align: center;
+      background: #ffe5e5;
+      padding: 10px;
+      border-radius: 8px;
+      display: none;
+    }
+    .error.show { display: block; }
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+      color: #666;
+      font-size: 14px;
+    }
+    .login-link a {
+      color: #00B7B5;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <div class="register-box">
+      <div class="logo">
+        <img src="assets/logopondok.png" alt="Logo">
+      </div>
+      <h2>Registrasi Ustadz</h2>
+      <p class="subtitle">Buat akun baru untuk ustadz</p>
+      <form id="registerForm">
+        <div class="form-group">
+          <label>Nama Lengkap</label>
+          <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input type="text" id="nama" placeholder="Contoh: Ustadz Ali" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Username</label>
+          <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input type="text" id="username" placeholder="Username untuk login" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="password" placeholder="Minimal 6 karakter" required>
+          </div>
+        </div>
+        <button type="submit">Daftar</button>
+        <div id="success" class="success"></div>
+        <div id="error" class="error"></div>
+      </form>
+      <div class="login-link">
+        Sudah punya akun? <a href="index.html">Login di sini</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nama = document.getElementById('nama').value;
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (password.length < 6) {
+        const errorEl = document.getElementById('error');
+        errorEl.textContent = 'Password minimal 6 karakter';
+        errorEl.classList.add('show');
+        return;
+      }
+
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nama, username, password })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        const successEl = document.getElementById('success');
+        successEl.textContent = 'Registrasi berhasil! Silakan login.';
+        successEl.classList.add('show');
+        document.getElementById('error').classList.remove('show');
+        document.getElementById('registerForm').reset();
+        
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 2000);
+      } else {
+        const errorEl = document.getElementById('error');
+        errorEl.textContent = data.message;
+        errorEl.classList.add('show');
+        document.getElementById('success').classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>
