@@ -191,6 +191,11 @@
       const data = await res.json();
       if (data.success) {
         localStorage.setItem('ustadz', data.nama);
+        localStorage.setItem('userId', data.userId);
+        localStorage.setItem('role', data.role);
+        if (data.kepala_tahfidz) {
+          localStorage.setItem('kepala_tahfidz', data.kepala_tahfidz);
+        }
         window.location.href = 'dashboard.html';
       } else {
         const errorEl = document.getElementById('error');

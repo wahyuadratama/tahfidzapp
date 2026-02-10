@@ -53,5 +53,49 @@
     "ayat_akhir": 10,
     "total_ayat": 10,
     "tanggal": "2026-02-09"
+  },
+  {
+    "id": 6,
+    "santri_id": 3,
+    "ustadz": "adam hidayat",
+    "juz": 3,
+    "nama_surat": "Al-Baqarah",
+    "ayat_awal": 1,
+    "ayat_akhir": 2,
+    "total_ayat": 2,
+    "tanggal": "2026-02-10"
+  },
+  {
+    "id": 7,
+    "santri_id": 2,
+    "ustadz": "Ustadz Zaenal Wahyudin",
+    "juz": 4,
+    "nama_surat": "Al-Baqarah",
+    "ayat_awal": 2,
+    "ayat_akhir": 5,
+    "total_ayat": 4,
+    "tanggal": "2026-02-10"
+  },
+  {
+    "id": 8,
+    "santri_id": 2,
+    "ustadz": "Ustadz Zaenal Wahyudin",
+    "juz": 4,
+    "nama_surat": "Al-Baqarah",
+    "ayat_awal": 6,
+    "ayat_akhir": 20,
+    "total_ayat": 15,
+    "tanggal": "2026-02-10"
+  },
+  {
+    "id": 9,
+    "santri_id": 4,
+    "ustadz": "Ustadz Zaenal Wahyudin",
+    "juz": 4,
+    "nama_surat": "yasin",
+    "ayat_awal": 3,
+    "ayat_akhir": 30,
+    "total_ayat": 28,
+    "tanggal": "2026-02-10"
   }
 ]

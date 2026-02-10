@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="assets/logopondok.png">
-  <title>Data Santri - Tahfidz App</title>
+  <title>Daftar User - Tahfidz App</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
@@ -46,7 +46,7 @@
     @media (min-width: 768px) {
       .container { margin: 40px auto; padding: 0 20px; }
     }
-    .form-box { 
+    .info-box {
       background: white;
       padding: 20px;
       border-radius: 15px;
@@ -55,7 +55,7 @@
       animation: fadeIn 0.5s ease;
     }
     @media (min-width: 768px) {
-      .form-box { 
+      .info-box { 
         padding: 30px;
         border-radius: 20px;
         margin-bottom: 30px;
@@ -65,7 +65,7 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .form-box h3 { 
+    .info-box h3 { 
       color: #333;
       margin-bottom: 15px;
       font-size: 18px;
@@ -73,47 +73,39 @@
       border-bottom: 3px solid #00B7B5;
     }
     @media (min-width: 768px) {
-      .form-box h3 { 
+      .info-box h3 { 
         margin-bottom: 20px;
         font-size: 22px;
         padding-bottom: 15px;
       }
     }
-    .form-group { margin-bottom: 20px; }
-    label { 
-      display: block;
-      margin-bottom: 8px;
-      color: #555;
-      font-weight: 600;
-      font-size: 14px;
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
     }
-    input { 
-      width: 100%;
-      padding: 12px 15px;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      font-size: 15px;
-      transition: all 0.3s;
+    @media (min-width: 768px) {
+      .stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
     }
-    input:focus {
-      outline: none;
-      border-color: #00B7B5;
-      box-shadow: 0 0 0 3px rgba(0,183,181,0.1);
-    }
-    button { 
-      padding: 12px 30px;
+    .stat-card {
       background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
       color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 15px;
-      transition: all 0.3s;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
     }
-    button:hover { 
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0,183,181,0.4);
+    .stat-card .number {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .stat-card .label {
+      font-size: 14px;
+      opacity: 0.9;
     }
     .table-container {
       background: white;
@@ -143,20 +135,20 @@
       transition: all 0.3s;
     }
     tbody tr:hover { background: #f8fffe; }
-    .btn-delete { 
-      background: #e74c3c;
-      padding: 8px 16px;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 13px;
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
       font-weight: 600;
-      transition: all 0.3s;
     }
-    .btn-delete:hover {
-      background: #c0392b;
-      transform: translateY(-2px);
+    .badge-admin {
+      background: #e74c3c;
+      color: white;
+    }
+    .badge-ustadz {
+      background: #00B7B5;
+      color: white;
     }
   </style>
 </head>
@@ -164,25 +156,28 @@
   <div class="navbar">
     <div style="display: flex; align-items: center;">
       <img src="assets/logopondok.png" alt="Logo" class="logo">
-      <h1>📋 Data Santri</h1>
+      <h1>👥 Daftar User</h1>
     </div>
     <a href="dashboard.html">← Kembali</a>
   </div>
 
   <div class="container">
-    <div class="form-box">
-      <h3>Tambah Santri Baru</h3>
-      <form id="santriForm">
-        <div class="form-group">
-          <label>Nama Santri</label>
-          <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
+    <div class="info-box">
+      <h3>Statistik User</h3>
+      <div class="stats">
+        <div class="stat-card">
+          <div class="number" id="totalUsers">0</div>
+          <div class="label">Total User</div>
         </div>
-        <div class="form-group">
-          <label>Kelas/Halaqah</label>
-          <input type="text" id="kelas" placeholder="Contoh: Halaqah A" required>
+        <div class="stat-card">
+          <div class="number" id="totalAdmin">0</div>
+          <div class="label">Admin</div>
         </div>
-        <button type="submit">💾 Simpan Data</button>
-      </form>
+        <div class="stat-card">
+          <div class="number" id="totalUstadz">0</div>
+          <div class="label">Ustadz</div>
+        </div>
+      </div>
     </div>
 
     <div class="table-container">
@@ -190,61 +185,47 @@
         <thead>
           <tr>
             <th>No</th>
-            <th>Nama Santri</th>
-            <th>Kelas/Halaqah</th>
-            <th>Status</th>
-            <th>Aksi</th>
+            <th>Username</th>
+            <th>Nama Lengkap</th>
+            <th>Role</th>
+            <th>ID</th>
           </tr>
         </thead>
-        <tbody id="santriList"></tbody>
+        <tbody id="userList"></tbody>
       </table>
     </div>
   </div>
 
   <script>
-    if (!localStorage.getItem('ustadz')) window.location.href = 'index.html';
+    const role = localStorage.getItem('role');
+    if (!localStorage.getItem('ustadz') || role !== 'admin') {
+      alert('Akses ditolak! Halaman ini hanya untuk Admin.');
+      window.location.href = 'dashboard.html';
+    }
 
-    async function loadSantri() {
-      const userId = localStorage.getItem('userId');
-      const role = localStorage.getItem('role');
-      const res = await fetch(`/api/santri?userId=${userId}&role=${role}`);
-      const santri = await res.json();
-      const tbody = document.getElementById('santriList');
-      tbody.innerHTML = santri.map((s, i) => `
+    async function loadUsers() {
+      const res = await fetch('/api/users');
+      const users = await res.json();
+      
+      // Update statistics
+      document.getElementById('totalUsers').textContent = users.length;
+      document.getElementById('totalAdmin').textContent = users.filter(u => u.role === 'admin').length;
+      document.getElementById('totalUstadz').textContent = users.filter(u => u.role === 'ustadz').length;
+      
+      // Display user list
+      const tbody = document.getElementById('userList');
+      tbody.innerHTML = users.map((u, i) => `
         <tr>
           <td>${i + 1}</td>
-          <td><strong>${s.nama}</strong></td>
-          <td>${s.kelas}</td>
-          <td><span style="color: ${s.aktif ? '#00B7B5' : '#999'}; font-weight: 600;">${s.aktif ? '✓ Aktif' : '✗ Tidak Aktif'}</span></td>
-          <td><button class="btn-delete" onclick="deleteSantri(${s.id})">🗑️ Hapus</button></td>
+          <td><strong>${u.username}</strong></td>
+          <td>${u.nama}</td>
+          <td><span class="badge badge-${u.role}">${u.role === 'admin' ? 'Admin' : 'Ustadz'}</span></td>
+          <td>#${u.id}</td>
         </tr>
       `).join('');
     }
 
-    document.getElementById('santriForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const nama = document.getElementById('nama').value;
-      const kelas = document.getElementById('kelas').value;
-      const ustadz_id = localStorage.getItem('userId');
-
-      await fetch('/api/santri', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nama, kelas, ustadz_id })
-      });
-
-      document.getElementById('santriForm').reset();
-      loadSantri();
-    });
-
-    async function deleteSantri(id) {
-      if (confirm('Yakin ingin menghapus santri ini?')) {
-        await fetch(`/api/santri/${id}`, { method: 'DELETE' });
-        loadSantri();
-      }
-    }
-
-    loadSantri();
+    loadUsers();
   </script>
 </body>
 </html>

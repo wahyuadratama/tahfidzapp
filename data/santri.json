@@ -1,14 +1,30 @@
 [
   {
     "id": 1,
-    "nama": "Sahrul Gunawan",
-    "kelas": "2",
-    "aktif": true
+    "nama": "Wahyu",
+    "kelas": "4",
+    "aktif": true,
+    "ustadz_id": 4
   },
   {
     "id": 2,
-    "nama": "Fikri",
+    "nama": "fikri",
     "kelas": "5",
-    "aktif": true
+    "aktif": true,
+    "ustadz_id": 3
+  },
+  {
+    "id": 3,
+    "nama": "ahmad",
+    "kelas": "6",
+    "aktif": true,
+    "ustadz_id": 4
+  },
+  {
+    "id": 4,
+    "nama": "ujang",
+    "kelas": "7",
+    "aktif": true,
+    "ustadz_id": 3
   }
 ]
