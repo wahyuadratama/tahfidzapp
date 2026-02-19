@@ -1,31 +1,12 @@
-# Dependencies
 node_modules/
-
-# Reports (generated files)
+.env
+backups/
 reports/pdf/*.pdf
 reports/excel/*.xlsx
-
-# Keep directory structure
 !reports/pdf/.gitkeep
 !reports/excel/.gitkeep
-
-# Environment variables
-.env
-.env.local
-
-# Logs
+.DS_Store
 *.log
 npm-debug.log*
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# IDE
 .vscode/
 .idea/
-*.swp
-*.swo
-*~
-
-.vercel

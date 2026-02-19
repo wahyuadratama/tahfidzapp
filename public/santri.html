@@ -172,14 +172,21 @@
   <div class="container">
     <div class="form-box">
       <h3>Tambah Santri Baru</h3>
+      
+      <!-- Search & Filter -->
+      <div style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+        <input type="text" id="searchSantri" placeholder="🔍 Cari nama santri..." style="flex: 1; min-width: 200px;">
+        <input type="text" id="filterKelas" placeholder="📚 Filter kelas..." style="flex: 1; min-width: 150px;">
+      </div>
+      
       <form id="santriForm">
         <div class="form-group">
           <label>Nama Santri</label>
-          <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
+          <input type="text" id="nama" placeholder="Masukkan nama lengkap" required pattern="[A-Za-z\s]{3,50}" title="Nama hanya huruf, minimal 3 karakter">
         </div>
         <div class="form-group">
           <label>Kelas/Halaqah</label>
-          <input type="text" id="kelas" placeholder="Contoh: Halaqah A" required>
+          <input type="text" id="kelas" placeholder="Contoh: Halaqah A" required pattern="[A-Za-z0-9\s]{1,20}" title="Format: huruf/angka, maksimal 20 karakter">
         </div>
         <button type="submit">💾 Simpan Data</button>
       </form>
@@ -204,11 +211,17 @@
   <script>
     if (!localStorage.getItem('ustadz')) window.location.href = 'index.html';
 
+    let allSantri = [];
+
     async function loadSantri() {
       const userId = localStorage.getItem('userId');
       const role = localStorage.getItem('role');
       const res = await fetch(`/api/santri?userId=${userId}&role=${role}`);
-      const santri = await res.json();
+      allSantri = await res.json();
+      displaySantri(allSantri);
+    }
+
+    function displaySantri(santri) {
       const tbody = document.getElementById('santriList');
       tbody.innerHTML = santri.map((s, i) => `
         <tr>
@@ -216,9 +229,25 @@
           <td><strong>${s.nama}</strong></td>
           <td>${s.kelas}</td>
           <td><span style="color: ${s.aktif ? '#00B7B5' : '#999'}; font-weight: 600;">${s.aktif ? '✓ Aktif' : '✗ Tidak Aktif'}</span></td>
-          <td><button class="btn-delete" onclick="deleteSantri(${s.id})">🗑️ Hapus</button></td>
+          <td><button class="btn-delete" onclick="deleteSantri(${s.id}, '${s.nama}')">🗑️ Hapus</button></td>
         </tr>
       `).join('');
+    }
+
+    // Search & Filter
+    document.getElementById('searchSantri').addEventListener('input', filterSantri);
+    document.getElementById('filterKelas').addEventListener('input', filterSantri);
+
+    function filterSantri() {
+      const searchTerm = document.getElementById('searchSantri').value.toLowerCase();
+      const kelasTerm = document.getElementById('filterKelas').value.toLowerCase();
+      
+      const filtered = allSantri.filter(s => 
+        s.nama.toLowerCase().includes(searchTerm) &&
+        s.kelas.toLowerCase().includes(kelasTerm)
+      );
+      
+      displaySantri(filtered);
     }
 
     document.getElementById('santriForm').addEventListener('submit', async (e) => {
@@ -237,8 +266,17 @@
       loadSantri();
     });
 
-    async function deleteSantri(id) {
-      if (confirm('Yakin ingin menghapus santri ini?')) {
+    async function deleteSantri(id, nama) {
+      // Get setoran count
+      const res = await fetch('/api/setoran');
+      const allSetoran = await res.json();
+      const setoranCount = allSetoran.filter(s => s.santri_id === id).length;
+      
+      const message = setoranCount > 0 
+        ? `Santri "${nama}" memiliki ${setoranCount} setoran.\n\nYakin ingin menghapus? Data setoran akan tetap ada.`
+        : `Yakin ingin menghapus santri "${nama}"?`;
+      
+      if (confirm(message)) {
         await fetch(`/api/santri/${id}`, { method: 'DELETE' });
         loadSantri();
       }

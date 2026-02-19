@@ -246,6 +246,122 @@
         border-top: 5px solid #00a09e;
       }
       
+      /* Custom Notification Modal */
+      .notification-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        z-index: 9999;
+        animation: fadeIn 0.3s ease;
+      }
+      .notification-modal.show {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .modal-content {
+        background: white;
+        border-radius: 25px;
+        padding: 40px 30px;
+        max-width: 500px;
+        width: 90%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: slideUp 0.4s ease;
+        text-align: center;
+        position: relative;
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(50px) scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      .modal-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+        animation: bellRing 1s ease-in-out infinite;
+      }
+      @keyframes bellRing {
+        0%, 100% { transform: rotate(0deg); }
+        10%, 30% { transform: rotate(-15deg); }
+        20%, 40% { transform: rotate(15deg); }
+      }
+      .modal-title {
+        color: #333;
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 15px;
+      }
+      .modal-message {
+        background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        font-size: 16px;
+        line-height: 1.8;
+        margin: 20px 0;
+        box-shadow: 0 5px 15px rgba(0, 183, 181, 0.3);
+      }
+      .modal-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 25px;
+      }
+      .modal-btn {
+        flex: 1;
+        padding: 15px 20px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 15px;
+        transition: all 0.3s;
+      }
+      .modal-btn-primary {
+        background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
+        color: white;
+      }
+      .modal-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 183, 181, 0.4);
+      }
+      .modal-btn-secondary {
+        background: #f0f0f0;
+        color: #666;
+      }
+      .modal-btn-secondary:hover {
+        background: #e0e0e0;
+        transform: translateY(-2px);
+      }
+      .modal-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #f0f0f0;
+        border: none;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 20px;
+        color: #999;
+        transition: all 0.3s;
+      }
+      .modal-close:hover {
+        background: #e0e0e0;
+        color: #333;
+        transform: rotate(90deg);
+      }
+      
       /* Statistik Section */
       .stats-section {
         margin-bottom: 30px;
@@ -350,6 +466,95 @@
         font-size: 48px;
         margin-bottom: 10px;
       }
+      
+      /* Leaderboard */
+      .leaderboard-section {
+        background: white;
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+        animation: fadeIn 0.7s ease;
+      }
+      .leaderboard-section h3 {
+        color: #333;
+        font-size: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .leaderboard-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      @media (min-width: 1024px) {
+        .leaderboard-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      .leaderboard-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 20px;
+        border-radius: 15px;
+        border-top: 4px solid #FFD700;
+      }
+      .leaderboard-card h4 {
+        color: #333;
+        font-size: 16px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .leaderboard-item {
+        background: white;
+        padding: 12px 15px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: all 0.3s;
+      }
+      .leaderboard-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      }
+      .leaderboard-rank {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 16px;
+        color: white;
+      }
+      .rank-1 { background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); }
+      .rank-2 { background: linear-gradient(135deg, #C0C0C0 0%, #A9A9A9 100%); }
+      .rank-3 { background: linear-gradient(135deg, #CD7F32 0%, #B8860B 100%); }
+      .rank-other { background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%); }
+      .leaderboard-info {
+        flex: 1;
+      }
+      .leaderboard-name {
+        font-weight: 600;
+        color: #333;
+        font-size: 14px;
+        margin-bottom: 3px;
+      }
+      .leaderboard-detail {
+        font-size: 12px;
+        color: #666;
+      }
+      .leaderboard-score {
+        font-size: 18px;
+        font-weight: 700;
+        color: #00B7B5;
+      }
     </style>
   </head>
   <body>
@@ -405,7 +610,7 @@
           <div class="recent-list" id="recentList">
             <div class="empty-state">
               <div class="icon">📭</div>
-              <p>Belum ada setoran</p>
+              <p>Belum ada setoran bulan ini</p>
             </div>
           </div>
         </div>
@@ -425,6 +630,12 @@
             <h3>Input Setoran</h3>
             <p>Catat setoran hafalan harian santri</p>
           </div>
+          
+          <div class="menu-card" style="border-top: 5px solid #9b59b6;" onclick="location.href = 'kelola-setoran.html'">
+            <div class="icon">📝</div>
+            <h3>Kelola Setoran</h3>
+            <p>Edit dan hapus data setoran</p>
+          </div>
 
           <div class="menu-card laporan" onclick="location.href = 'laporan.html'">
             <div class="icon">📊</div>
@@ -436,38 +647,56 @@
 
       <!-- Menu untuk Admin -->
       <div id="adminMenu" style="display: none;">
-        <div class="menu-grid">
-          <div class="menu-card santri" onclick="location.href = 'santri.html'">
-            <div class="icon">📋</div>
-            <h3>Data Santri</h3>
-            <p>Kelola data santri dan informasi halaqah</p>
-          </div>
-
-          <div class="menu-card setoran" onclick="location.href = 'setoran.html'">
-            <div class="icon">✍️</div>
-            <h3>Input Setoran</h3>
-            <p>Catat setoran hafalan harian santri</p>
-          </div>
-
-          <div class="menu-card laporan" onclick="location.href = 'laporan.html'">
-            <div class="icon">📊</div>
-            <h3>Laporan</h3>
-            <p>Lihat dan cetak laporan mingguan/bulanan</p>
-          </div>
+        <!-- Leaderboard Section for Admin -->
+        <div class="leaderboard-section">
+          <h3>🏆 Papan Prestasi</h3>
+          <div class="leaderboard-grid" id="adminLeaderboard"></div>
         </div>
 
         <h3 style="color: #333; margin: 30px 0 20px; font-size: 20px;">Menu Admin</h3>
         <div class="menu-grid">
+          <div class="menu-card" style="border-top: 5px solid #9b59b6;" onclick="location.href = 'kelompok.html'">
+            <div class="icon">👥</div>
+            <h3>Kelompok Setoran</h3>
+            <p>Lihat kelompok santri per pembimbing</p>
+          </div>
+          <div class="menu-card" style="border-top: 5px solid #3498db;" onclick="location.href = 'laporan.html'">
+            <div class="icon">📊</div>
+            <h3>Laporan & Statistik</h3>
+            <p>Lihat grafik dan laporan lengkap</p>
+          </div>
           <div class="menu-card" style="border-top: 5px solid #e74c3c;" onclick="location.href = 'users.html'">
             <div class="icon">👥</div>
             <h3>Daftar User</h3>
-            <p>Lihat semua user yang terdaftar</p>
+            <p>Kelola user pembimbing</p>
           </div>
           <div class="menu-card" style="border-top: 5px solid #f39c12;" onclick="location.href = 'monitoring.html'">
-            <div class="icon">📊</div>
+            <div class="icon">📈</div>
             <h3>Monitoring Ustadz</h3>
-            <p>Pantau aktivitas pembimbingan ustadz</p>
+            <p>Grafik aktivitas pembimbing</p>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Notification Modal -->
+    <div class="notification-modal" id="reminderModal">
+      <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <div class="modal-icon">🔔</div>
+        <h2 class="modal-title">📚 Pengingat Bimbingan Hafalan</h2>
+        <div class="modal-message">
+          <strong>Assalamu'alaikum <span id="modalTitle"></span> <span id="modalName"></span></strong><br><br>
+          Sudah membimbing santri untuk hafalan hari ini?<br>
+          Yuk, semangat membimbing para penghafal Al-Qur'an! 🌟
+        </div>
+        <div class="modal-buttons">
+          <button class="modal-btn modal-btn-primary" onclick="goToReminder()">
+            ✅ Lihat Detail
+          </button>
+          <button class="modal-btn modal-btn-secondary" onclick="dismissReminder()">
+            ⏰ Nanti Saja
+          </button>
         </div>
       </div>
     </div>
@@ -476,6 +705,7 @@
       const ustadz = localStorage.getItem("ustadz");
       const role = localStorage.getItem("role");
       const userId = localStorage.getItem("userId");
+      const gender = localStorage.getItem("gender") || "L";
       const kepalaTahfidz = localStorage.getItem("kepala_tahfidz");
       
       if (!ustadz) {
@@ -492,12 +722,105 @@
         // Show menu based on role
         if (role === "admin") {
           document.getElementById("adminMenu").style.display = "block";
+          loadLeaderboard('adminLeaderboard');
         } else {
           // Load statistics for ustadz
           document.getElementById("ustadzStats").style.display = "block";
           document.getElementById("ustadzMenu").style.display = "block";
           loadDashboardStats();
+          
+          // Check if should show reminder (once per session)
+          checkReminder();
         }
+      }
+
+      async function loadLeaderboard(containerId) {
+        try {
+          const response = await fetch('/api/leaderboard');
+          const data = await response.json();
+          
+          const container = document.getElementById(containerId);
+          
+          // Top Santri Card
+          let santriHTML = `
+            <div class="leaderboard-card">
+              <h4>🌟 Santri Terbaik</h4>
+          `;
+          
+          data.topSantri.forEach((santri, idx) => {
+            const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : 'rank-other';
+            santriHTML += `
+              <div class="leaderboard-item">
+                <div class="leaderboard-rank ${rankClass}">${idx + 1}</div>
+                <div class="leaderboard-info">
+                  <div class="leaderboard-name">${santri.nama}</div>
+                  <div class="leaderboard-detail">👳 ${santri.ustadz}</div>
+                </div>
+                <div class="leaderboard-score">${santri.totalAyat}</div>
+              </div>
+            `;
+          });
+          
+          santriHTML += `</div>`;
+          
+          // Top Ustadz Card
+          let ustadzHTML = `
+            <div class="leaderboard-card" style="border-top-color: #00B7B5;">
+              <h4>👑 Pembimbing Terbaik</h4>
+          `;
+          
+          data.topUstadz.forEach((ustadz, idx) => {
+            const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : 'rank-other';
+            const icon = ustadz.gender === 'P' ? '🧕' : '👳';
+            ustadzHTML += `
+              <div class="leaderboard-item">
+                <div class="leaderboard-rank ${rankClass}">${idx + 1}</div>
+                <div class="leaderboard-info">
+                  <div class="leaderboard-name">${icon} ${ustadz.nama}</div>
+                  <div class="leaderboard-detail">👥 ${ustadz.totalSantri} Santri</div>
+                </div>
+                <div class="leaderboard-score">${ustadz.totalSetoran}</div>
+              </div>
+            `;
+          });
+          
+          ustadzHTML += `</div>`;
+          
+          container.innerHTML = santriHTML + ustadzHTML;
+        } catch (error) {
+          console.error('Error loading leaderboard:', error);
+        }
+      }
+
+      function checkReminder() {
+        // Check if reminder already shown in this session
+        const reminderShown = sessionStorage.getItem('reminderShown');
+        
+        // Show reminder only once per session
+        if (!reminderShown) {
+          // Set modal content
+          const titleText = gender === 'P' ? 'Ustadzah' : 'Ustadz';
+          document.getElementById('modalTitle').textContent = titleText;
+          document.getElementById('modalName').textContent = ustadz;
+          
+          // Show modal after 2 seconds
+          setTimeout(() => {
+            document.getElementById('reminderModal').classList.add('show');
+            sessionStorage.setItem('reminderShown', 'true');
+          }, 2000);
+        }
+      }
+
+      function goToReminder() {
+        window.location.href = 'reminder.html';
+      }
+
+      function dismissReminder() {
+        closeModal();
+      }
+
+      function closeModal() {
+        document.getElementById('reminderModal').classList.remove('show');
       }
 
       async function loadDashboardStats() {
@@ -511,7 +834,7 @@
           document.getElementById("totalAyat").textContent = stats.totalAyatBulanIni;
           document.getElementById("capaianJuz").textContent = stats.capaianJuzTertinggi;
           
-          // Update setoran terakhir
+          // Update setoran terakhir - hanya tampilkan jika ada data
           const recentList = document.getElementById("recentList");
           if (stats.recentSetoran && stats.recentSetoran.length > 0) {
             recentList.innerHTML = stats.recentSetoran.map(item => `
@@ -529,7 +852,7 @@
             recentList.innerHTML = `
               <div class="empty-state">
                 <div class="icon">📭</div>
-                <p>Belum ada setoran</p>
+                <p>Belum ada setoran bulan ini. Yuk mulai input setoran!</p>
               </div>
             `;
           }
@@ -548,7 +871,9 @@
         localStorage.removeItem("ustadz");
         localStorage.removeItem("userId");
         localStorage.removeItem("role");
+        localStorage.removeItem("gender");
         localStorage.removeItem("kepala_tahfidz");
+        sessionStorage.removeItem("reminderShown");
         window.location.href = "index.html";
       }
     </script>

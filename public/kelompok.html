@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/logopondok.png">
+  <title>Kelompok Setoran - Tahfidz App</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+    }
+    .navbar { 
+      background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
+      color: white;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .navbar h1 { font-size: 26px; font-weight: 600; }
+    .navbar .logo { width: 45px; height: 45px; object-fit: contain; margin-right: 15px; }
+    .navbar a { 
+      color: white;
+      text-decoration: none;
+      background: rgba(255,255,255,0.2);
+      padding: 10px 24px;
+      border-radius: 25px;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+    .navbar a:hover { background: rgba(255,255,255,0.3); }
+    .container { max-width: 1400px; margin: 40px auto; padding: 0 20px; }
+    
+    .kelompok-card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .kelompok-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 3px solid #00B7B5;
+    }
+    .kelompok-number {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: 700;
+      box-shadow: 0 5px 15px rgba(0,183,181,0.3);
+    }
+    .kelompok-info h2 {
+      color: #333;
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+    .kelompok-info p {
+      color: #666;
+      font-size: 14px;
+    }
+    .santri-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+    }
+    .santri-item {
+      background: #f8f9fa;
+      padding: 15px 20px;
+      border-radius: 12px;
+      border-left: 4px solid #00B7B5;
+      transition: all 0.3s;
+    }
+    .santri-item:hover {
+      background: #e8f8f8;
+      transform: translateX(5px);
+      box-shadow: 0 4px 12px rgba(0,183,181,0.2);
+    }
+    .santri-name {
+      font-weight: 600;
+      color: #333;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    .santri-kelas {
+      color: #666;
+      font-size: 14px;
+    }
+    .stats {
+      display: flex;
+      gap: 30px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px dashed #e0e0e0;
+    }
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .stat-icon {
+      font-size: 24px;
+    }
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #00B7B5;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: #999;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div style="display: flex; align-items: center;">
+      <img src="assets/logopondok.png" alt="Logo" class="logo">
+      <h1>👥 Kelompok Setoran</h1>
+    </div>
+    <a href="dashboard.html">← Kembali</a>
+  </div>
+
+  <div class="container" id="kelompokContainer">
+    <div class="empty-state">
+      <div style="font-size: 64px; margin-bottom: 15px;">⏳</div>
+      <p>Memuat data kelompok...</p>
+    </div>
+  </div>
+
+  <script>
+    if (!localStorage.getItem('ustadz') || localStorage.getItem('role') !== 'admin') {
+      window.location.href = 'dashboard.html';
+    }
+
+    async function loadKelompok() {
+      try {
+        const [usersRes, santriRes, setoranRes] = await Promise.all([
+          fetch('/api/users'),
+          fetch('/api/santri?userId=1&role=admin'),
+          fetch('/api/setoran')
+        ]);
+        
+        const users = await usersRes.json();
+        const allSantri = await santriRes.json();
+        const allSetoran = await setoranRes.json();
+        
+        // Filter hanya ustadz dan sort by ID (urutan register)
+        const ustadzList = users
+          .filter(u => u.role === 'ustadz')
+          .sort((a, b) => a.id - b.id);
+        
+        displayKelompok(ustadzList, allSantri, allSetoran);
+      } catch (error) {
+        console.error('Error loading kelompok:', error);
+        document.getElementById('kelompokContainer').innerHTML = `
+          <div class="empty-state">
+            <div style="font-size: 64px; margin-bottom: 15px;">❌</div>
+            <p>Gagal memuat data</p>
+          </div>
+        `;
+      }
+    }
+
+    function displayKelompok(ustadzList, allSantri, allSetoran) {
+      const container = document.getElementById('kelompokContainer');
+      
+      if (ustadzList.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div style="font-size: 64px; margin-bottom: 15px;">📭</div>
+            <p>Belum ada kelompok</p>
+          </div>
+        `;
+        return;
+      }
+      
+      let html = '';
+      
+      ustadzList.forEach((ustadz, index) => {
+        const kelompokNumber = index + 1;
+        
+        // Get santri for this ustadz
+        const santriList = allSantri.filter(s => s.ustadz_id === ustadz.id && s.aktif);
+        
+        // Get setoran count
+        const santriIds = santriList.map(s => s.id);
+        const setoranCount = allSetoran.filter(s => santriIds.includes(s.santri_id)).length;
+        
+        // Get total ayat
+        const totalAyat = allSetoran
+          .filter(s => santriIds.includes(s.santri_id))
+          .reduce((sum, s) => sum + s.total_ayat, 0);
+        
+        const icon = ustadz.gender === 'P' ? '🧕' : '👳';
+        
+        html += `
+          <div class="kelompok-card">
+            <div class="kelompok-header">
+              <div class="kelompok-number">${kelompokNumber}</div>
+              <div class="kelompok-info">
+                <h2>${icon} ${ustadz.nama}</h2>
+                <p>Kelompok ${kelompokNumber} • ${santriList.length} Santri</p>
+              </div>
+            </div>
+            
+            ${santriList.length > 0 ? `
+              <div class="santri-grid">
+                ${santriList.map((santri, idx) => `
+                  <div class="santri-item">
+                    <div class="santri-name">${idx + 1}. ${santri.nama}</div>
+                    <div class="santri-kelas">📚 ${santri.kelas}</div>
+                  </div>
+                `).join('')}
+              </div>
+              
+              <div class="stats">
+                <div class="stat-item">
+                  <div class="stat-icon">👥</div>
+                  <div>
+                    <div class="stat-value">${santriList.length}</div>
+                    <div class="stat-label">Santri</div>
+                  </div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-icon">📝</div>
+                  <div>
+                    <div class="stat-value">${setoranCount}</div>
+                    <div class="stat-label">Setoran</div>
+                  </div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-icon">📖</div>
+                  <div>
+                    <div class="stat-value">${totalAyat.toLocaleString()}</div>
+                    <div class="stat-label">Total Ayat</div>
+                  </div>
+                </div>
+              </div>
+            ` : `
+              <div class="empty-state">
+                <div style="font-size: 48px; margin-bottom: 10px;">📭</div>
+                <p>Belum ada santri di kelompok ini</p>
+              </div>
+            `}
+          </div>
+        `;
+      });
+      
+      container.innerHTML = html;
+    }
+
+    loadKelompok();
+  </script>
+</body>
+</html>

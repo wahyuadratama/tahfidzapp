@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="assets/logopondok.png">
-  <title>Laporan - Tahfidz App</title>
+  <title>Laporan & Statistik - Tahfidz App</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
@@ -42,7 +43,7 @@
       .navbar a { padding: 10px 24px; }
     }
     .navbar a:hover { background: rgba(255,255,255,0.3); }
-    .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+    .container { max-width: 1400px; margin: 20px auto; padding: 0 15px; }
     @media (min-width: 768px) {
       .container { margin: 40px auto; padding: 0 20px; }
     }
@@ -56,7 +57,7 @@
     }
     @media (min-width: 768px) {
       .form-box { 
-        padding: 35px;
+        padding: 30px;
         border-radius: 20px;
         margin-bottom: 30px;
       }
@@ -68,29 +69,19 @@
     .form-box h3 { 
       color: #333;
       margin-bottom: 20px;
-      font-size: 18px;
+      font-size: 20px;
       padding-bottom: 12px;
       border-bottom: 3px solid #00B7B5;
     }
-    @media (min-width: 768px) {
-      .form-box h3 { 
-        margin-bottom: 25px;
-        font-size: 22px;
-        padding-bottom: 15px;
-      }
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: end;
     }
     .form-group { 
-      display: inline-block;
-      margin-right: 15px;
-      margin-bottom: 15px;
-      width: 100%;
-    }
-    @media (min-width: 640px) {
-      .form-group { 
-        width: auto;
-        margin-right: 20px;
-        margin-bottom: 20px;
-      }
+      flex: 1;
+      min-width: 200px;
     }
     label { 
       display: block;
@@ -100,6 +91,7 @@
       font-size: 14px;
     }
     input { 
+      width: 100%;
       padding: 12px 15px;
       border: 2px solid #e0e0e0;
       border-radius: 10px;
@@ -113,19 +105,11 @@
     }
     .button-group {
       display: flex;
-      flex-direction: column;
       gap: 10px;
-      margin-top: 10px;
-    }
-    @media (min-width: 640px) {
-      .button-group {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 15px;
-      }
+      flex-wrap: wrap;
     }
     button { 
-      padding: 12px 20px;
+      padding: 12px 24px;
       color: white;
       border: none;
       border-radius: 10px;
@@ -133,14 +117,6 @@
       font-weight: 600;
       font-size: 14px;
       transition: all 0.3s;
-      width: 100%;
-    }
-    @media (min-width: 640px) {
-      button { 
-        padding: 12px 28px;
-        font-size: 15px;
-        width: auto;
-      }
     }
     button:hover { 
       transform: translateY(-2px);
@@ -149,66 +125,135 @@
     .btn-view { background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%); }
     .btn-pdf { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
     .btn-excel { background: linear-gradient(135deg, #27ae60 0%, #229954 100%); }
-    .report-container {
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    @media (min-width: 768px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (min-width: 1024px) {
+      .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    .stat-card {
       background: white;
-      padding: 20px;
+      padding: 25px;
       border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      text-align: center;
       animation: fadeIn 0.6s ease;
     }
-    @media (min-width: 768px) {
-      .report-container {
-        padding: 35px;
-        border-radius: 20px;
-      }
-    }
-    .report-container h3 {
-      color: #333;
-      font-size: 18px;
+    .stat-card .icon {
+      font-size: 40px;
       margin-bottom: 10px;
     }
-    .report-container p {
-      color: #666;
-      margin-bottom: 20px;
+    .stat-card .value {
+      font-size: 36px;
+      font-weight: 700;
+      color: #00B7B5;
+      margin-bottom: 5px;
+    }
+    .stat-card .label {
       font-size: 14px;
+      color: #666;
+    }
+    
+    .chart-container {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      animation: fadeIn 0.7s ease;
+    }
+    .chart-container h4 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+    .chart-wrapper {
+      position: relative;
+      height: 300px;
     }
     @media (min-width: 768px) {
-      .report-container h3 {
-        font-size: 22px;
-      }
-      .report-container p {
-        font-size: 15px;
-        margin-bottom: 25px;
+      .chart-wrapper {
+        height: 400px;
       }
     }
-    .table-container {
+    .table-wrapper {
       overflow-x: auto;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: white;
       border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-    @media (min-width: 768px) {
-      .table-container {
-        border-radius: 12px;
-      }
-    }
-    table { width: 100%; border-collapse: collapse; min-width: 600px; }
-    th, td { padding: 12px 8px; text-align: left; }
-    @media (min-width: 768px) {
-      th, td { padding: 16px; }
-    }
-    th { 
+    .data-table thead {
       background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
+    }
+    .data-table th {
+      padding: 15px;
+      text-align: left;
       color: white;
       font-weight: 600;
+      font-size: 14px;
       text-transform: uppercase;
-      font-size: 13px;
       letter-spacing: 0.5px;
     }
-    tbody tr {
+    .data-table tbody tr {
       border-bottom: 1px solid #f0f0f0;
       transition: all 0.3s;
     }
-    tbody tr:hover { background: #f8fffe; }
+    .data-table tbody tr:hover {
+      background: #f8f9fa;
+      transform: scale(1.01);
+      box-shadow: 0 2px 8px rgba(0,183,181,0.1);
+    }
+    .data-table tbody tr:last-child {
+      border-bottom: none;
+    }
+    .data-table td {
+      padding: 15px;
+      color: #333;
+      font-size: 14px;
+    }
+    .data-table .number-cell {
+      text-align: center;
+      font-weight: 700;
+      color: #00B7B5;
+      font-size: 16px;
+    }
+    .data-table .name-cell {
+      font-weight: 600;
+      color: #333;
+    }
+    .data-table .badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .data-table .badge-ayat {
+      background: linear-gradient(135deg, #00B7B5 0%, #008f8d 100%);
+      color: white;
+    }
+    .data-table .badge-juz {
+      background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+      color: white;
+    }
+    
     #reportResult { display: none; }
   </style>
 </head>
@@ -216,56 +261,134 @@
   <div class="navbar">
     <div style="display: flex; align-items: center;">
       <img src="assets/logopondok.png" alt="Logo" class="logo">
-      <h1>📊 Laporan Setoran</h1>
+      <h1>📊 Laporan & Statistik</h1>
     </div>
     <a href="dashboard.html">← Kembali</a>
   </div>
 
   <div class="container">
     <div class="form-box">
-      <h3>Generate Laporan</h3>
+      <h3>📅 Pilih Periode Laporan</h3>
       
-      <div class="form-group">
-        <label>📅 Tanggal Mulai</label>
-        <input type="date" id="startDate" required>
+      <!-- Preset Buttons -->
+      <div style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+        <button type="button" onclick="setPreset('today')" style="flex: 1; min-width: 120px; background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); padding: 10px;">
+          📅 Hari Ini
+        </button>
+        <button type="button" onclick="setPreset('week')" style="flex: 1; min-width: 120px; background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); padding: 10px;">
+          📆 Minggu Ini
+        </button>
+        <button type="button" onclick="setPreset('month')" style="flex: 1; min-width: 120px; background: linear-gradient(135deg, #e67e22 0%, #d35400 100%); padding: 10px;">
+          🗓️ Bulan Ini
+        </button>
       </div>
       
-      <div class="form-group">
-        <label>📅 Tanggal Akhir</label>
-        <input type="date" id="endDate" required>
-      </div>
-      
-      <div class="button-group">
-        <button class="btn-view" onclick="generateReport('view')">👁️ Lihat Laporan</button>
-        <button class="btn-pdf" onclick="generateReport('pdf')">📝 Download PDF</button>
-        <button class="btn-excel" onclick="generateReport('excel')">📊 Download Excel</button>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Tanggal Mulai</label>
+          <input type="date" id="startDate" required>
+        </div>
+        <div class="form-group">
+          <label>Tanggal Akhir</label>
+          <input type="date" id="endDate" required>
+        </div>
+        <div class="button-group">
+          <button class="btn-view" onclick="generateReport('view')">👁️ Lihat</button>
+          <button class="btn-pdf" onclick="generateReport('pdf')">📝 PDF</button>
+          <button class="btn-excel" onclick="generateReport('excel')">📊 Excel</button>
+        </div>
       </div>
     </div>
 
-    <div id="reportResult" class="report-container">
-      <h3>Hasil Laporan</h3>
-      <p id="periode"></p>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Nama Santri</th>
-              <th>Ustadz Pendamping</th>
-              <th>Nama Surat</th>
-              <th>Ayat</th>
-              <th>Total Ayat</th>
-              <th>Capaian Juz</th>
-            </tr>
-          </thead>
-          <tbody id="reportTable"></tbody>
-        </table>
+    <div id="reportResult">
+      <!-- Statistics Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="icon">👥</div>
+          <div class="value" id="totalSantri">0</div>
+          <div class="label">Total Santri</div>
+        </div>
+        <div class="stat-card">
+          <div class="icon">📝</div>
+          <div class="value" id="totalSetoran">0</div>
+          <div class="label">Total Setoran</div>
+        </div>
+        <div class="stat-card">
+          <div class="icon">📖</div>
+          <div class="value" id="totalAyat">0</div>
+          <div class="label">Total Ayat</div>
+        </div>
+        <div class="stat-card">
+          <div class="icon">🎯</div>
+          <div class="value" id="avgJuz">0</div>
+          <div class="label">Rata-rata Juz</div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="chart-container" id="chartSetoran">
+        <h4>📊 Grafik Setoran per Ustadz</h4>
+        <div class="chart-wrapper">
+          <canvas id="ustadzChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-container" id="chartAyat">
+        <h4>📈 Grafik Total Ayat per Ustadz</h4>
+        <div class="chart-wrapper">
+          <canvas id="ayatChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Daftar Santri per Pembimbing (Admin Only) -->
+      <div class="chart-container" id="santriListContainer" style="display: none;">
+        <h4>👥 Daftar Santri per Pembimbing</h4>
+        <div id="santriList"></div>
+      </div>
+
+      <!-- Detail Santri Table -->
+      <div class="chart-container" id="detailTableContainer">
+        <h4 id="detailTableTitle">📋 Detail Setoran Santri</h4>
+        <div id="detailTable"></div>
       </div>
     </div>
   </div>
 
   <script>
     if (!localStorage.getItem('ustadz')) window.location.href = 'index.html';
+
+    let ustadzChart, ayatChart;
+
+    // Function to set preset dates
+    function setPreset(type) {
+      const today = new Date();
+      const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
+      
+      let startDate, endDate;
+      
+      if (type === 'today') {
+        startDate = today;
+        endDate = today;
+      } else if (type === 'week') {
+        // Senin minggu ini
+        const monday = new Date(today);
+        monday.setDate(today.getDate() - today.getDay() + 1);
+        startDate = monday;
+        endDate = today;
+      } else if (type === 'month') {
+        // Awal bulan ini
+        startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        endDate = today;
+      }
+      
+      document.getElementById('startDate').value = formatDate(startDate);
+      document.getElementById('endDate').value = formatDate(endDate);
+    }
 
     async function generateReport(format) {
       const startDate = document.getElementById('startDate').value;
@@ -289,54 +412,346 @@
       const result = await res.json();
 
       if (format === 'view') {
-        document.getElementById('periode').textContent = `Periode: ${startDate} – ${endDate}`;
-        const tbody = document.getElementById('reportTable');
-        
-        // Group by ustadz for display
-        const grouped = {};
-        result.data.forEach(row => {
-          if (!grouped[row.ustadz]) {
-            grouped[row.ustadz] = [];
-          }
-          grouped[row.ustadz].push(row);
-        });
-        
-        let html = '';
-        let globalNo = 1;
-        Object.keys(grouped).sort().forEach(ustadzName => {
-          html += `
-            <tr style="background: #00B7B5; color: white;">
-              <td colspan="7" style="font-weight: bold; padding: 12px;">Ustadz Pendamping: ${ustadzName}</td>
-            </tr>
-          `;
-          grouped[ustadzName].forEach(row => {
-            html += `
-              <tr>
-                <td><strong>${globalNo++}</strong></td>
-                <td><strong>${row.nama}</strong></td>
-                <td>-</td>
-                <td>${row.namaSurat}</td>
-                <td>${row.ayatRange}</td>
-                <td><span style="color: #00B7B5; font-weight: 600;">${row.totalAyat}</span></td>
-                <td><span style="color: #00B7B5; font-weight: 600;">${row.capaianJuz}</span></td>
-              </tr>
-            `;
-          });
-        });
-        
-        tbody.innerHTML = html;
+        displayStatistics(result.data);
+        if (role === 'admin') {
+          await displaySantriList();
+        }
         document.getElementById('reportResult').style.display = 'block';
       } else if (format === 'pdf' || format === 'excel') {
         window.open(result.file, '_blank');
       }
     }
 
-    // Set default dates (current week)
+    async function displaySantriList() {
+      const userId = localStorage.getItem('userId');
+      const role = localStorage.getItem('role');
+      
+      try {
+        // Fetch santri (filtered by role)
+        const res = await fetch(`/api/santri?userId=${userId}&role=${role}`);
+        const allSantri = await res.json();
+        
+        // Fetch users to get ustadz names
+        const usersRes = await fetch('/api/users');
+        const users = await usersRes.json();
+        
+        // Group santri by ustadz
+        const groupedSantri = {};
+        allSantri.forEach(santri => {
+          const ustadz = users.find(u => u.id === santri.ustadz_id);
+          const ustadzName = ustadz ? ustadz.nama : 'Unknown';
+          
+          if (!groupedSantri[ustadzName]) {
+            groupedSantri[ustadzName] = [];
+          }
+          groupedSantri[ustadzName].push(santri);
+        });
+        
+        // Display santri list
+        const santriContainer = document.getElementById('santriList');
+        let html = '';
+        
+        if (Object.keys(groupedSantri).length === 0) {
+          html = '<p style="text-align: center; color: #999; padding: 30px;">Tidak ada data santri</p>';
+        } else {
+          Object.keys(groupedSantri).sort().forEach(ustadzName => {
+            const santriList = groupedSantri[ustadzName];
+            
+            html += `
+              <div style="margin-bottom: 25px; background: #f8f9fa; padding: 20px; border-radius: 12px; border-left: 5px solid #3498db;">
+                <h5 style="color: #3498db; font-size: 18px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                  <span>👳</span> ${ustadzName}
+                  <span style="font-size: 14px; color: #666; font-weight: normal;">(${santriList.length} Santri)</span>
+                </h5>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;">
+            `;
+            
+            santriList.forEach((santri, idx) => {
+              html += `
+                <div style="background: white; padding: 12px 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 10px;">
+                  <span style="color: #3498db; font-weight: 700; font-size: 16px;">${idx + 1}.</span>
+                  <span style="color: #333; font-size: 14px;">${santri.nama}</span>
+                </div>
+              `;
+            });
+            
+            html += `
+                </div>
+              </div>
+            `;
+          });
+        }
+        
+        santriContainer.innerHTML = html;
+      } catch (error) {
+        console.error('Error loading santri list:', error);
+        document.getElementById('santriList').innerHTML = '<p style="text-align: center; color: #e74c3c; padding: 30px;">Gagal memuat data santri</p>';
+      }
+    }
+
+    function displayStatistics(data) {
+      const role = localStorage.getItem('role');
+      
+      // Check if no data
+      if (!data || data.length === 0) {
+        alert('Tidak ada data setoran pada periode ini');
+        document.getElementById('reportResult').style.display = 'none';
+        return;
+      }
+      
+      // Group by ustadz
+      const grouped = {};
+      data.forEach(row => {
+        if (!grouped[row.ustadz]) {
+          grouped[row.ustadz] = { count: 0, totalAyat: 0, juzList: [] };
+        }
+        grouped[row.ustadz].count++;
+        grouped[row.ustadz].totalAyat += row.totalAyat;
+        grouped[row.ustadz].juzList.push(row.capaianJuz);
+      });
+
+      // Calculate statistics
+      const totalSantri = data.length;
+      const totalSetoran = data.length;
+      const totalAyat = data.reduce((sum, row) => sum + row.totalAyat, 0);
+      const avgJuz = data.length > 0 ? (data.reduce((sum, row) => sum + row.capaianJuz, 0) / data.length).toFixed(1) : 0;
+
+      // Update stat cards
+      document.getElementById('totalSantri').textContent = totalSantri;
+      document.getElementById('totalSetoran').textContent = totalSetoran;
+      document.getElementById('totalAyat').textContent = totalAyat.toLocaleString();
+      document.getElementById('avgJuz').textContent = avgJuz;
+
+      // Prepare chart data
+      const ustadzNames = Object.keys(grouped);
+      const setoranCounts = ustadzNames.map(name => grouped[name].count);
+      const ayatCounts = ustadzNames.map(name => grouped[name].totalAyat);
+
+      // Destroy existing charts
+      if (ustadzChart) ustadzChart.destroy();
+      if (ayatChart) ayatChart.destroy();
+
+      // Show/Hide elements based on role
+      const chartSetoran = document.getElementById('chartSetoran');
+      const chartAyat = document.getElementById('chartAyat');
+      const santriListContainer = document.getElementById('santriListContainer');
+      const detailTableTitle = document.getElementById('detailTableTitle');
+      
+      if (role !== 'admin') {
+        // User: Hide charts and santri list, show only detail table
+        chartSetoran.style.display = 'none';
+        chartAyat.style.display = 'none';
+        santriListContainer.style.display = 'none';
+        detailTableTitle.textContent = '📋 Data Setoran Santri';
+        displayUserTable(data);
+      } else {
+        // Admin: Show all
+        chartSetoran.style.display = 'block';
+        chartAyat.style.display = 'block';
+        santriListContainer.style.display = 'block';
+        detailTableTitle.textContent = '📋 Detail Setoran per Pembimbing';
+        displayAdminDetail(data);
+        
+        // Create Ustadz Chart (Bar)
+        const ctx1 = document.getElementById('ustadzChart').getContext('2d');
+        ustadzChart = new Chart(ctx1, {
+          type: 'bar',
+          data: {
+            labels: ustadzNames,
+            datasets: [{
+              label: 'Jumlah Setoran',
+              data: setoranCounts,
+              backgroundColor: 'rgba(0, 183, 181, 0.7)',
+              borderColor: 'rgba(0, 183, 181, 1)',
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+
+        // Create Ayat Chart (Horizontal Bar)
+        const ctx2 = document.getElementById('ayatChart').getContext('2d');
+        ayatChart = new Chart(ctx2, {
+          type: 'bar',
+          data: {
+            labels: ustadzNames,
+            datasets: [{
+              label: 'Total Ayat',
+              data: ayatCounts,
+              backgroundColor: 'rgba(52, 152, 219, 0.7)',
+              borderColor: 'rgba(52, 152, 219, 1)',
+              borderWidth: 2
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              x: { beginAtZero: true }
+            }
+          }
+        });
+      }
+    }
+
+    // Display table for user (ustadz)
+    function displayUserTable(data) {
+      const detailContainer = document.getElementById('detailTable');
+      
+      if (data.length === 0) {
+        detailContainer.innerHTML = '<p style="text-align: center; color: #999; padding: 30px;">Tidak ada data setoran pada periode ini</p>';
+        return;
+      }
+      
+      let html = `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">No</th>
+                <th>Nama Santri</th>
+                <th>Surat & Ayat</th>
+                <th style="text-align: center;">Total Ayat</th>
+                <th style="text-align: center;">Juz</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+      
+      data.forEach((santri, idx) => {
+        // Build surat detail
+        let suratDetail = '';
+        if (santri.suratList && santri.suratList.length > 0) {
+          suratDetail = santri.suratList.map(surat => 
+            `<div style="margin-bottom: 5px;">📖 <strong>${surat.nama}</strong> (Ayat: ${surat.ayatRange}) - ${surat.totalAyat} ayat</div>`
+          ).join('');
+        } else {
+          suratDetail = `<div>📖 ${santri.namaSurat} | Ayat ${santri.ayatRange}</div>`;
+        }
+        
+        html += `
+          <tr>
+            <td class="number-cell">${idx + 1}</td>
+            <td class="name-cell">${santri.nama}</td>
+            <td>${suratDetail}</td>
+            <td style="text-align: center;"><span class="badge badge-ayat">${santri.totalAyat} Ayat</span></td>
+            <td style="text-align: center;"><span class="badge badge-juz">Juz ${santri.capaianJuz}</span></td>
+          </tr>
+        `;
+      });
+      
+      html += `
+            </tbody>
+          </table>
+        </div>
+      `;
+      
+      detailContainer.innerHTML = html;
+    }
+
+    // Display detail for admin (grouped by ustadz)
+    function displayAdminDetail(data) {
+      const detailContainer = document.getElementById('detailTable');
+      let html = '';
+      
+      // Group data by ustadz
+      const groupedByUstadz = {};
+      data.forEach(row => {
+        if (!groupedByUstadz[row.ustadz]) {
+          groupedByUstadz[row.ustadz] = [];
+        }
+        groupedByUstadz[row.ustadz].push(row);
+      });
+      
+      // Check if no data
+      if (Object.keys(groupedByUstadz).length === 0) {
+        html = '<p style="text-align: center; color: #999; padding: 30px;">Tidak ada data setoran pada periode ini</p>';
+      } else {
+        // Create grouped layout
+        Object.keys(groupedByUstadz).sort().forEach(ustadzName => {
+          const santriList = groupedByUstadz[ustadzName];
+          
+          html += `
+            <div style="margin-bottom: 30px; background: #f8f9fa; padding: 20px; border-radius: 12px; border-left: 5px solid #00B7B5;">
+              <h5 style="color: #00B7B5; font-size: 18px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <span>👳</span> ${ustadzName}
+                <span style="font-size: 14px; color: #666; font-weight: normal;">(${santriList.length} Santri)</span>
+              </h5>
+              <div style="display: grid; grid-template-columns: 1fr; gap: 12px;">
+          `;
+          
+          santriList.forEach((santri, idx) => {
+            // Build surat detail
+            let suratDetail = '';
+            if (santri.suratList && santri.suratList.length > 0) {
+              suratDetail = santri.suratList.map(surat => 
+                `<div style="font-size: 13px; color: #666; margin-top: 3px;">📖 ${surat.nama} (Ayat: ${surat.ayatRange}) - ${surat.totalAyat} ayat</div>`
+              ).join('');
+            } else {
+              suratDetail = `<div style="font-size: 14px; color: #666;">📖 ${santri.namaSurat} | Ayat ${santri.ayatRange}</div>`;
+            }
+            
+            html += `
+              <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: all 0.3s;" onmouseover="this.style.transform='translateX(5px)'; this.style.boxShadow='0 4px 12px rgba(0,183,181,0.2)'" onmouseout="this.style.transform='translateX(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.05)'">
+                <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 10px;">
+                  <div style="flex: 1; min-width: 200px;">
+                    <div style="font-weight: 600; color: #333; font-size: 16px; margin-bottom: 5px;">
+                      ${idx + 1}. ${santri.nama}
+                    </div>
+                    ${suratDetail}
+                  </div>
+                  <div style="display: flex; gap: 20px; align-items: center;">
+                    <div style="text-align: center;">
+                      <div style="font-size: 12px; color: #999; margin-bottom: 3px;">Total Ayat</div>
+                      <div style="font-size: 20px; font-weight: 700; color: #00B7B5;">${santri.totalAyat}</div>
+                    </div>
+                    <div style="text-align: center;">
+                      <div style="font-size: 12px; color: #999; margin-bottom: 3px;">Juz</div>
+                      <div style="font-size: 20px; font-weight: 700; color: #3498db;">${santri.capaianJuz}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          });
+          
+          html += `
+              </div>
+            </div>
+          `;
+        });
+      }
+      
+      detailContainer.innerHTML = html;
+    }
+
+    // Set default dates (first day of current month to today)
     const today = new Date();
-    const monday = new Date(today);
-    monday.setDate(today.getDate() - today.getDay() + 1);
-    document.getElementById('startDate').valueAsDate = monday;
-    document.getElementById('endDate').valueAsDate = today;
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    
+    // Format dates to YYYY-MM-DD
+    const formatDate = (date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+    
+    document.getElementById('startDate').value = formatDate(firstDayOfMonth);
+    document.getElementById('endDate').value = formatDate(today);
   </script>
 </body>
 </html>

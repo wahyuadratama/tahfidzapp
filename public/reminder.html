@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="assets/logopondok.png" />
+    <title>Notifikasi - Tahfidz App</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+      }
+      .navbar {
+        background: linear-gradient(135deg, #00b7b5 0%, #008f8d 100%);
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+      .navbar h1 {
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .navbar .logo {
+        width: 35px;
+        height: 35px;
+        object-fit: contain;
+        margin-right: 10px;
+      }
+      @media (min-width: 768px) {
+        .navbar {
+          padding: 20px 40px;
+        }
+        .navbar h1 {
+          font-size: 26px;
+        }
+        .navbar .logo {
+          width: 45px;
+          height: 45px;
+          margin-right: 15px;
+        }
+      }
+      .navbar a {
+        color: white;
+        text-decoration: none;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 8px 16px;
+        border-radius: 25px;
+        transition: all 0.3s;
+        font-weight: 600;
+        font-size: 14px;
+      }
+      @media (min-width: 768px) {
+        .navbar a {
+          padding: 10px 24px;
+        }
+      }
+      .navbar a:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+      .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 0 15px;
+      }
+      @media (min-width: 768px) {
+        .container {
+          margin: 40px auto;
+          padding: 0 20px;
+        }
+      }
+      .notification-box {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        animation: fadeIn 0.5s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .notification-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+        animation: bell 2s ease-in-out infinite;
+      }
+      @keyframes bell {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        10%,
+        30% {
+          transform: rotate(-10deg);
+        }
+        20%,
+        40% {
+          transform: rotate(10deg);
+        }
+      }
+      .notification-box h2 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 24px;
+      }
+      .notification-message {
+        background: linear-gradient(135deg, #00b7b5 0%, #008f8d 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        font-size: 18px;
+        line-height: 1.6;
+        margin: 20px 0;
+        box-shadow: 0 5px 15px rgba(0, 183, 181, 0.3);
+      }
+      .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+        margin: 30px 0;
+      }
+      @media (min-width: 640px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      .stat-item {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #00b7b5;
+      }
+      .stat-item .label {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+      .stat-item .value {
+        color: #00b7b5;
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .btn {
+        padding: 15px 30px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 15px;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #00b7b5 0%, #008f8d 100%);
+        color: white;
+      }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 183, 181, 0.4);
+      }
+      .btn-secondary {
+        background: #6c757d;
+        color: white;
+      }
+      .btn-secondary:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+      }
+      .reminder-time {
+        color: #999;
+        font-size: 14px;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <div style="display: flex; align-items: center">
+        <img src="assets/logopondok.png" alt="Logo" class="logo" />
+        <h1>🔔 Notifikasi Reminder</h1>
+      </div>
+      <a href="dashboard.html">← Kembali</a>
+    </div>
+
+    <div class="container">
+      <div class="notification-box">
+        <div class="notification-icon">🔔</div>
+        <h2>Pengingat Bimbingan Hafalan</h2>
+
+        <div class="notification-message" id="reminderMessage">
+          Assalamu'alaikum <span id="titleName"></span>
+          <span id="userName"></span>,<br />
+          Sudah membimbing santri untuk hafalan hari ini?
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="label">Total Santri Antum</div>
+            <div class="value" id="totalSantri">0</div>
+          </div>
+          <div class="stat-item">
+            <div class="label">Setoran Hari Ini</div>
+            <div class="value" id="setoranHariIni">0</div>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <a href="setoran.html" class="btn btn-primary"
+            >✍️ Input Setoran Sekarang</a
+          >
+          <a href="dashboard.html" class="btn btn-secondary"
+            >📊 Lihat Dashboard</a
+          >
+        </div>
+
+        <div class="reminder-time">
+          Pengingat ini muncul setiap hari untuk membantu Antum tetap konsisten
+          dalam membimbing santri
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const ustadz = localStorage.getItem("ustadz");
+      const userId = localStorage.getItem("userId");
+      const role = localStorage.getItem("role");
+      const gender = localStorage.getItem("gender") || "L";
+
+      if (!ustadz) {
+        window.location.href = "index.html";
+      }
+
+      // Set title based on gender
+      const titleName = gender === "P" ? "Ustadzah" : "Ustadz";
+      document.getElementById("titleName").textContent = titleName;
+      document.getElementById("userName").textContent = ustadz;
+
+      // Load statistics
+      async function loadStats() {
+        try {
+          const response = await fetch(
+            `/api/dashboard-stats?userId=${userId}&role=${role}`,
+          );
+          const stats = await response.json();
+
+          document.getElementById("totalSantri").textContent =
+            stats.totalSantri;
+
+          // Count today's setoran
+          const today = new Date().toISOString().split("T")[0];
+          const todaySetoran = stats.recentSetoran.filter(
+            (s) => s.tanggal === today,
+          ).length;
+          document.getElementById("setoranHariIni").textContent = todaySetoran;
+        } catch (error) {
+          console.error("Error loading stats:", error);
+        }
+      }
+
+      loadStats();
+
+      // Mark notification as seen
+      localStorage.setItem(
+        "lastReminderSeen",
+        new Date().toISOString().split("T")[0],
+      );
+    </script>
+  </body>
+</html>

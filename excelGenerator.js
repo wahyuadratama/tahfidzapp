@@ -33,14 +33,22 @@ function generateExcel(reportData, startDate, endDate) {
     const santriList = grouped[ustadzName];
     
     worksheetData.push([`Ustadz Pendamping: ${ustadzName}`]);
-    worksheetData.push(['No', 'Nama Santri', 'Nama Surat', 'Ayat', 'Total Ayat', 'Capaian Juz']);
+    worksheetData.push(['No', 'Nama Santri', 'Detail Surat & Ayat', 'Total Ayat', 'Capaian Juz']);
     
     santriList.forEach((row) => {
+      let suratDetail = '';
+      if (row.suratList && row.suratList.length > 0) {
+        suratDetail = row.suratList.map(surat => 
+          `${surat.nama} (${surat.ayatRange}) - ${surat.totalAyat} ayat`
+        ).join('; ');
+      } else {
+        suratDetail = `${row.namaSurat} (${row.ayatRange})`;
+      }
+      
       worksheetData.push([
         globalNo++,
         row.nama,
-        row.namaSurat,
-        row.ayatRange,
+        suratDetail,
         row.totalAyat,
         row.capaianJuz
       ]);

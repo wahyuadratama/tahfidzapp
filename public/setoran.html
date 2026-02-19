@@ -170,13 +170,15 @@
         
         <div class="form-row">
           <div class="form-group">
-            <label>📖 Juz</label>
-            <input type="number" id="juz" min="1" max="30" placeholder="1-30" required>
+            <label>📄 Nama Surat</label>
+            <select id="nama_surat" required>
+              <option value="">-- Pilih Surat --</option>
+            </select>
           </div>
           
           <div class="form-group">
-            <label>📄 Nama Surat</label>
-            <input type="text" id="nama_surat" placeholder="Contoh: Al-Baqarah" required>
+            <label>📖 Juz</label>
+            <input type="number" id="juz" min="1" max="30" placeholder="Auto-fill" readonly style="background: #f5f5f5;">
           </div>
         </div>
         
@@ -216,6 +218,144 @@
     document.getElementById('ustadz').value = ustadzName;
     document.getElementById('tanggal').valueAsDate = new Date();
 
+    // Data surat Al-Quran dengan juz
+    const suratData = [
+      { nama: "Al-Fatihah", juz: 1 },
+      { nama: "Al-Baqarah", juz: 1 },
+      { nama: "Ali 'Imran", juz: 3 },
+      { nama: "An-Nisa", juz: 4 },
+      { nama: "Al-Ma'idah", juz: 6 },
+      { nama: "Al-An'am", juz: 7 },
+      { nama: "Al-A'raf", juz: 8 },
+      { nama: "Al-Anfal", juz: 9 },
+      { nama: "At-Taubah", juz: 10 },
+      { nama: "Yunus", juz: 11 },
+      { nama: "Hud", juz: 11 },
+      { nama: "Yusuf", juz: 12 },
+      { nama: "Ar-Ra'd", juz: 13 },
+      { nama: "Ibrahim", juz: 13 },
+      { nama: "Al-Hijr", juz: 14 },
+      { nama: "An-Nahl", juz: 14 },
+      { nama: "Al-Isra", juz: 15 },
+      { nama: "Al-Kahf", juz: 15 },
+      { nama: "Maryam", juz: 16 },
+      { nama: "Taha", juz: 16 },
+      { nama: "Al-Anbiya", juz: 17 },
+      { nama: "Al-Hajj", juz: 17 },
+      { nama: "Al-Mu'minun", juz: 18 },
+      { nama: "An-Nur", juz: 18 },
+      { nama: "Al-Furqan", juz: 18 },
+      { nama: "Ash-Shu'ara", juz: 19 },
+      { nama: "An-Naml", juz: 19 },
+      { nama: "Al-Qasas", juz: 20 },
+      { nama: "Al-'Ankabut", juz: 20 },
+      { nama: "Ar-Rum", juz: 21 },
+      { nama: "Luqman", juz: 21 },
+      { nama: "As-Sajdah", juz: 21 },
+      { nama: "Al-Ahzab", juz: 21 },
+      { nama: "Saba", juz: 22 },
+      { nama: "Fatir", juz: 22 },
+      { nama: "Yasin", juz: 22 },
+      { nama: "As-Saffat", juz: 23 },
+      { nama: "Sad", juz: 23 },
+      { nama: "Az-Zumar", juz: 23 },
+      { nama: "Ghafir", juz: 24 },
+      { nama: "Fussilat", juz: 25 },
+      { nama: "Ash-Shura", juz: 25 },
+      { nama: "Az-Zukhruf", juz: 25 },
+      { nama: "Ad-Dukhan", juz: 25 },
+      { nama: "Al-Jathiyah", juz: 25 },
+      { nama: "Al-Ahqaf", juz: 26 },
+      { nama: "Muhammad", juz: 26 },
+      { nama: "Al-Fath", juz: 26 },
+      { nama: "Al-Hujurat", juz: 26 },
+      { nama: "Qaf", juz: 26 },
+      { nama: "Adh-Dhariyat", juz: 26 },
+      { nama: "At-Tur", juz: 27 },
+      { nama: "An-Najm", juz: 27 },
+      { nama: "Al-Qamar", juz: 27 },
+      { nama: "Ar-Rahman", juz: 27 },
+      { nama: "Al-Waqi'ah", juz: 27 },
+      { nama: "Al-Hadid", juz: 27 },
+      { nama: "Al-Mujadilah", juz: 28 },
+      { nama: "Al-Hashr", juz: 28 },
+      { nama: "Al-Mumtahanah", juz: 28 },
+      { nama: "As-Saff", juz: 28 },
+      { nama: "Al-Jumu'ah", juz: 28 },
+      { nama: "Al-Munafiqun", juz: 28 },
+      { nama: "At-Taghabun", juz: 28 },
+      { nama: "At-Talaq", juz: 28 },
+      { nama: "At-Tahrim", juz: 28 },
+      { nama: "Al-Mulk", juz: 29 },
+      { nama: "Al-Qalam", juz: 29 },
+      { nama: "Al-Haqqah", juz: 29 },
+      { nama: "Al-Ma'arij", juz: 29 },
+      { nama: "Nuh", juz: 29 },
+      { nama: "Al-Jinn", juz: 29 },
+      { nama: "Al-Muzzammil", juz: 29 },
+      { nama: "Al-Muddaththir", juz: 29 },
+      { nama: "Al-Qiyamah", juz: 29 },
+      { nama: "Al-Insan", juz: 29 },
+      { nama: "Al-Mursalat", juz: 29 },
+      { nama: "An-Naba", juz: 30 },
+      { nama: "An-Nazi'at", juz: 30 },
+      { nama: "'Abasa", juz: 30 },
+      { nama: "At-Takwir", juz: 30 },
+      { nama: "Al-Infitar", juz: 30 },
+      { nama: "Al-Mutaffifin", juz: 30 },
+      { nama: "Al-Inshiqaq", juz: 30 },
+      { nama: "Al-Buruj", juz: 30 },
+      { nama: "At-Tariq", juz: 30 },
+      { nama: "Al-A'la", juz: 30 },
+      { nama: "Al-Ghashiyah", juz: 30 },
+      { nama: "Al-Fajr", juz: 30 },
+      { nama: "Al-Balad", juz: 30 },
+      { nama: "Ash-Shams", juz: 30 },
+      { nama: "Al-Lail", juz: 30 },
+      { nama: "Ad-Duha", juz: 30 },
+      { nama: "Ash-Sharh", juz: 30 },
+      { nama: "At-Tin", juz: 30 },
+      { nama: "Al-'Alaq", juz: 30 },
+      { nama: "Al-Qadr", juz: 30 },
+      { nama: "Al-Bayyinah", juz: 30 },
+      { nama: "Az-Zalzalah", juz: 30 },
+      { nama: "Al-'Adiyat", juz: 30 },
+      { nama: "Al-Qari'ah", juz: 30 },
+      { nama: "At-Takathur", juz: 30 },
+      { nama: "Al-'Asr", juz: 30 },
+      { nama: "Al-Humazah", juz: 30 },
+      { nama: "Al-Fil", juz: 30 },
+      { nama: "Quraish", juz: 30 },
+      { nama: "Al-Ma'un", juz: 30 },
+      { nama: "Al-Kauthar", juz: 30 },
+      { nama: "Al-Kafirun", juz: 30 },
+      { nama: "An-Nasr", juz: 30 },
+      { nama: "Al-Masad", juz: 30 },
+      { nama: "Al-Ikhlas", juz: 30 },
+      { nama: "Al-Falaq", juz: 30 },
+      { nama: "An-Nas", juz: 30 }
+    ];
+
+    // Populate surat dropdown
+    const suratSelect = document.getElementById('nama_surat');
+    suratData.forEach(surat => {
+      const option = document.createElement('option');
+      option.value = surat.nama;
+      option.textContent = surat.nama;
+      option.dataset.juz = surat.juz;
+      suratSelect.appendChild(option);
+    });
+
+    // Auto-fill juz when surat selected
+    suratSelect.addEventListener('change', function() {
+      const selectedOption = this.options[this.selectedIndex];
+      if (selectedOption.dataset.juz) {
+        document.getElementById('juz').value = selectedOption.dataset.juz;
+      } else {
+        document.getElementById('juz').value = '';
+      }
+    });
+
     async function loadSantri() {
       const userId = localStorage.getItem('userId');
       const role = localStorage.getItem('role');
@@ -239,20 +379,26 @@
         tanggal: document.getElementById('tanggal').value
       };
 
-      await fetch('/api/setoran', {
+      const response = await fetch('/api/setoran', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
-
-      document.getElementById('successMsg').style.display = 'block';
-      document.getElementById('setoranForm').reset();
-      document.getElementById('ustadz').value = ustadzName;
-      document.getElementById('tanggal').valueAsDate = new Date();
       
-      setTimeout(() => {
-        document.getElementById('successMsg').style.display = 'none';
-      }, 3000);
+      const result = await response.json();
+
+      if (response.ok) {
+        document.getElementById('successMsg').style.display = 'block';
+        document.getElementById('setoranForm').reset();
+        document.getElementById('ustadz').value = ustadzName;
+        document.getElementById('tanggal').valueAsDate = new Date();
+        
+        setTimeout(() => {
+          document.getElementById('successMsg').style.display = 'none';
+        }, 3000);
+      } else {
+        alert('Gagal menyimpan setoran: ' + (result.message || 'Terjadi kesalahan'));
+      }
     });
 
     loadSantri();

@@ -22,6 +22,8 @@ Aplikasi web untuk mencatat setoran hafalan Al-Qur'an dengan laporan mingguan da
 
 ## 📦 Instalasi
 
+### Development (Local)
+
 1. Clone repository:
 ```bash
 git clone <repository-url>
@@ -39,6 +41,57 @@ npm start
 ```
 
 4. Buka browser: `http://localhost:3000`
+
+### Production (Tencent Cloud VPS)
+
+**Quick Deploy (~20 menit):**
+
+1. **Setup VPS:**
+```bash
+ssh root@YOUR_VPS_IP
+sudo apt update && sudo apt upgrade -y
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt install -y nodejs git
+sudo npm install -g pm2
+```
+
+2. **Upload & Run:**
+```bash
+cd /var/www
+sudo mkdir -p tahfidzapp && sudo chown -R $USER:$USER tahfidzapp
+cd tahfidzapp
+git clone <repository-url> .
+npm install --production
+chmod -R 755 data/ reports/
+pm2 start server.js --name tahfidz-app
+pm2 startup && pm2 save
+```
+
+3. **Setup Nginx:**
+```bash
+sudo apt install -y nginx
+sudo nano /etc/nginx/sites-available/tahfidz-app
+# Paste config (lihat TENCENT_CLOUD_DEPLOY.md)
+sudo ln -s /etc/nginx/sites-available/tahfidz-app /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl restart nginx
+```
+
+4. **Setup Firewall:**
+```bash
+sudo ufw allow 22/tcp && sudo ufw allow 80/tcp && sudo ufw allow 443/tcp
+sudo ufw enable
+```
+
+5. **Install Puppeteer Dependencies:**
+```bash
+sudo apt-get install -y libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0
+pm2 restart tahfidz-app
+```
+
+**Akses:** `http://YOUR_VPS_IP`
+
+📖 **Panduan Lengkap:** Lihat `TENCENT_CLOUD_DEPLOY.md`  
+⚡ **Quick Reference:** Lihat `TENCENT_QUICK.md`
 
 ## 🔐 Login Default
 

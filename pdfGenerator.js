@@ -27,23 +27,32 @@ function generateGroupedTables(reportData) {
             <tr>
               <th width="6%">No</th>
               <th width="25%">Nama Santri</th>
-              <th width="20%">Nama Surat</th>
-              <th width="12%">Ayat</th>
+              <th width="35%">Detail Surat & Ayat</th>
               <th width="12%">Total Ayat</th>
               <th width="12%">Capaian Juz</th>
             </tr>
           </thead>
           <tbody>
-            ${santriList.map((row) => `
+            ${santriList.map((row) => {
+              let suratDetail = '';
+              if (row.suratList && row.suratList.length > 0) {
+                suratDetail = row.suratList.map(surat => 
+                  `${surat.nama} (${surat.ayatRange}) - ${surat.totalAyat} ayat`
+                ).join('<br>');
+              } else {
+                suratDetail = `${row.namaSurat} (${row.ayatRange})`;
+              }
+              
+              return `
               <tr>
                 <td>${globalNo++}</td>
                 <td>${row.nama}</td>
-                <td>${row.namaSurat}</td>
-                <td>${row.ayatRange}</td>
+                <td>${suratDetail}</td>
                 <td>${row.totalAyat}</td>
                 <td>${row.capaianJuz}</td>
               </tr>
-            `).join('')}
+              `;
+            }).join('')}
           </tbody>
         </table>
       </div>

@@ -85,9 +85,14 @@
       gap: 15px;
       margin-bottom: 20px;
     }
-    @media (min-width: 768px) {
+    @media (min-width: 640px) {
       .stats {
         grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    @media (min-width: 1024px) {
+      .stats {
+        grid-template-columns: repeat(5, 1fr);
         gap: 20px;
       }
     }
@@ -97,11 +102,26 @@
       padding: 20px;
       border-radius: 12px;
       text-align: center;
+      transition: all 0.3s;
+    }
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 183, 181, 0.4);
+    }
+    .stat-card.male {
+      background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    }
+    .stat-card.female {
+      background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
     }
     .stat-card .number {
       font-size: 32px;
       font-weight: bold;
       margin-bottom: 5px;
+    }
+    .stat-card .icon {
+      font-size: 24px;
+      margin-bottom: 8px;
     }
     .stat-card .label {
       font-size: 14px;
@@ -150,6 +170,34 @@
       background: #00B7B5;
       color: white;
     }
+    .badge-male {
+      background: #3498db;
+      color: white;
+    }
+    .badge-female {
+      background: #e91e63;
+      color: white;
+    }
+    .btn-delete {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .btn-delete:hover {
+      background: #c0392b;
+      transform: scale(1.05);
+    }
+    .btn-delete:disabled {
+      background: #95a5a6;
+      cursor: not-allowed;
+      transform: none;
+    }
   </style>
 </head>
 <body>
@@ -166,16 +214,29 @@
       <h3>Statistik User</h3>
       <div class="stats">
         <div class="stat-card">
+          <div class="icon">👥</div>
           <div class="number" id="totalUsers">0</div>
           <div class="label">Total User</div>
         </div>
         <div class="stat-card">
+          <div class="icon">🔐</div>
           <div class="number" id="totalAdmin">0</div>
           <div class="label">Admin</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card male">
+          <div class="icon">👳</div>
           <div class="number" id="totalUstadz">0</div>
           <div class="label">Ustadz</div>
+        </div>
+        <div class="stat-card female">
+          <div class="icon">🧕</div>
+          <div class="number" id="totalUstadzah">0</div>
+          <div class="label">Ustadzah</div>
+        </div>
+        <div class="stat-card">
+          <div class="icon">📚</div>
+          <div class="number" id="totalPembimbing">0</div>
+          <div class="label">Total Pembimbing</div>
         </div>
       </div>
     </div>
@@ -187,8 +248,10 @@
             <th>No</th>
             <th>Username</th>
             <th>Nama Lengkap</th>
+            <th>Gender</th>
             <th>Role</th>
             <th>ID</th>
+            <th>Aksi</th>
           </tr>
         </thead>
         <tbody id="userList"></tbody>
@@ -207,22 +270,69 @@
       const res = await fetch('/api/users');
       const users = await res.json();
       
+      // Calculate statistics
+      const totalUsers = users.length;
+      const totalAdmin = users.filter(u => u.role === 'admin').length;
+      const ustadzUsers = users.filter(u => u.role === 'ustadz');
+      const totalUstadz = ustadzUsers.filter(u => u.gender === 'L').length;
+      const totalUstadzah = ustadzUsers.filter(u => u.gender === 'P').length;
+      const totalPembimbing = ustadzUsers.length;
+      
       // Update statistics
-      document.getElementById('totalUsers').textContent = users.length;
-      document.getElementById('totalAdmin').textContent = users.filter(u => u.role === 'admin').length;
-      document.getElementById('totalUstadz').textContent = users.filter(u => u.role === 'ustadz').length;
+      document.getElementById('totalUsers').textContent = totalUsers;
+      document.getElementById('totalAdmin').textContent = totalAdmin;
+      document.getElementById('totalUstadz').textContent = totalUstadz;
+      document.getElementById('totalUstadzah').textContent = totalUstadzah;
+      document.getElementById('totalPembimbing').textContent = totalPembimbing;
       
       // Display user list
       const tbody = document.getElementById('userList');
-      tbody.innerHTML = users.map((u, i) => `
-        <tr>
-          <td>${i + 1}</td>
-          <td><strong>${u.username}</strong></td>
-          <td>${u.nama}</td>
-          <td><span class="badge badge-${u.role}">${u.role === 'admin' ? 'Admin' : 'Ustadz'}</span></td>
-          <td>#${u.id}</td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = users.map((u, i) => {
+        const genderBadge = u.role === 'ustadz' 
+          ? (u.gender === 'P' 
+              ? '<span class="badge badge-female">🧕 Ustadzah</span>' 
+              : '<span class="badge badge-male">👳 Ustadz</span>')
+          : '<span class="badge badge-admin">-</span>';
+        
+        const deleteBtn = u.role === 'admin' 
+          ? '<button class="btn-delete" disabled>🔒 Admin</button>'
+          : `<button class="btn-delete" onclick="deleteUser(${u.id}, '${u.nama}')">🗑️ Hapus</button>`;
+        
+        return `
+          <tr>
+            <td>${i + 1}</td>
+            <td><strong>${u.username}</strong></td>
+            <td>${u.nama}</td>
+            <td>${genderBadge}</td>
+            <td><span class="badge badge-${u.role}">${u.role === 'admin' ? '🔐 Admin' : '📚 Pembimbing'}</span></td>
+            <td>#${u.id}</td>
+            <td>${deleteBtn}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function deleteUser(userId, namaUser) {
+      const confirm = window.confirm(
+        `⚠️ PERINGATAN!\n\nAnda akan menghapus user:\n"${namaUser}"\n\nSemua data terkait akan dihapus:\n- Santri yang dibimbing\n- Setoran santri tersebut\n\nApakah Anda yakin?`
+      );
+      
+      if (!confirm) return;
+      
+      try {
+        const res = await fetch(`/api/users/${userId}`, { method: 'DELETE' });
+        const result = await res.json();
+        
+        if (result.success) {
+          alert(`✅ User "${namaUser}" berhasil dihapus!\n\n${result.deletedSantri} santri dan ${result.deletedSetoran} setoran telah dihapus.`);
+          loadUsers();
+        } else {
+          alert('❌ Gagal menghapus user: ' + result.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Terjadi kesalahan saat menghapus user');
+      }
     }
 
     loadUsers();
