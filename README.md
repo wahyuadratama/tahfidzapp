@@ -1,5 +1,5 @@
-# Tahfidz App - Sistem Pencatatan Setoran Tahfidz
 
+<<<<<<< HEAD
 Aplikasi web untuk mencatat setoran hafalan Al-Qur'an dengan laporan mingguan dan bulanan untuk Pondok Pesantren Modern Darul Mukhlisin.
 
 ## 🚀 Fitur
@@ -210,3 +210,5 @@ Developed for Pondok Pesantren Modern Darul Mukhlisin
 ---
 
 **Barakallahu fiikum** 🤲
+=======
+>>>>>>> 459adfcb3bb666731b33ac1b4574dea38b5bd57c
